@@ -50,6 +50,17 @@ const ROOMS = {
     optimalPulse: [50, 80],
     artClass: "room-4",
   },
+  5: {
+    name: "Barometric Pressure",
+    flavor: "You're gonna feel the pressure on your body. Your ears are gonna pop. It's like you're lowering down in the ocean.",
+    unlockCost: 1500,
+    baseVibeRate: 8,
+    clickMultiplier: 3,
+    pressureEffect: 5,
+    optimalPressure: [55, 85],
+    optimalPulse: [30, 60],
+    artClass: "room-5",
+  },
 };
 
 
@@ -162,6 +173,32 @@ const ROOM_FLAVOR = {
     ],
     npcColors: ["#ff00ff", "#00ffff", "#ffff00", "#ff4444", "#44ff44"],
     npcCount: 6,
+  },
+  5: {
+    sounds: [
+      "*pop*", "*creak*", "HISSSSS", "*groan*", "CLANK",
+      "*whoosh*", "*drip*", "PRESSURE", "*ears ringing*",
+    ],
+    emojis: [
+      "\u{1F30A}", "\u{1F4A7}", "\u{2693}", "\u{1F6E2}\u{FE0F}", "\u{1F300}",
+      "\u{1F9CA}", "\u{1FAE7}", "\u{1F6DF}",
+    ],
+    quotes: [
+      "My ears just popped",
+      "It's like you're lowering down in the ocean",
+      "I'm gonna be crying at movies, just like on a plane",
+      "We just pressurize it, like you do on planes",
+      "I have a sudden desire for ginger ale",
+      "IS IT STILL PRESSURIZED?!",
+      "Layers five through ten are pressurized",
+      "We need an airlock. The bathroom is an airlock.",
+      "I don't want you doing traps with a mind not addled by intense barometric trauma",
+      "The barotrauma is part of the experience",
+      "My whole brain chemistry is different now",
+      "If anyone opens a window, everyone gets launched out",
+    ],
+    npcColors: ["#4466aa", "#6688cc", "#335588", "#7799dd", "#2244aa"],
+    npcCount: 5,
   },
 };
 
@@ -374,6 +411,56 @@ var ROOM_ITEMS = {
       effect: { type: "comfyRange", value: 7 },
     },
   ],
+  5: [
+    {
+      id: "pressure_gauge",
+      emoji: "\u{1F4CA}",
+      name: "Pressure Gauge",
+      desc: "Monitoring the descent. The needle keeps going. This is fine.",
+      baseCost: 800,
+      effect: { type: "vibeRate", value: 7 },
+    },
+    {
+      id: "dive_helmet",
+      emoji: "\u{1FA7C}",
+      name: "Dive Helmet",
+      desc: "For the rapid descent. Your ears thank you. Your brain does not.",
+      baseCost: 1000,
+      effect: { type: "clickPower", value: 7 },
+    },
+    {
+      id: "ginger_ale",
+      emoji: "\u{1F9CB}",
+      name: "Ginger Ale",
+      desc: "You have a sudden desire for ginger ale. Just like on a plane. It'll be great.",
+      baseCost: 600,
+      effect: { type: "vibeRate", value: 5 },
+    },
+    {
+      id: "airlock_upgrade",
+      emoji: "\u{1F6AA}",
+      name: "Airlock Upgrade",
+      desc: "The bathroom between four and five, improved. Better seal. Smoother pressurization. No blow-outs.",
+      baseCost: 1200,
+      effect: { type: "comfyRange", value: 8 },
+    },
+    {
+      id: "submarine_porthole",
+      emoji: "\u{1F6F8}",
+      name: "Submarine Porthole",
+      desc: "A window to the deep. Don't open it — if anyone opens a window, everyone gets launched out.",
+      baseCost: 1500,
+      effect: { type: "vibeRate", value: 12 },
+    },
+    {
+      id: "ear_plugs",
+      emoji: "\u{1F9F7}",
+      name: "Pressure Ear Plugs",
+      desc: "Not for noise — for equalization. Your eardrums were never designed for this.",
+      baseCost: 900,
+      effect: { type: "clickPower", value: 8 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -417,6 +504,7 @@ function createDefaultState() {
       2: { unlocked: false, level: 0 },
       3: { unlocked: false, level: 0 },
       4: { unlocked: false, level: 0 },
+      5: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
