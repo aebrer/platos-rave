@@ -288,9 +288,55 @@ The first playable build should have:
 - Room 8 Cantainer Store puzzle mechanic
 - Room 9 archivist NPC system
 - 300-key drop event
+- Metaversal Variant Rooms (see below)
 - Python-generated procedural art assets
 - Sound effects and music
 - Achievements
 - Statistics page (including pressure/pulse history graph?)
 - Save export/import
 - Itch.io release
+
+---
+
+## Metaversal Variant Rooms
+
+Unlockable via prestige/Kandi. These are alternate versions of rooms based on ideas
+from the episode that didn't make the "canonical" 10-room layout. Once unlocked, a
+variant replaces its base room for future runs (toggleable), changing mechanics and
+flavor while keeping the room's position in the progression.
+
+### Candidates from the Episode
+
+- **Room 1 Variant — The One-Room Rave Pod**: Travis's capsule hotel idea. "A small,
+  one-room rave that's small. You come, you just test it out, you get a little tiny
+  spoonful of rave." Personal dial controls the vibe intensity. Different generator
+  mechanic: you set your own rate instead of buying upgrades.
+
+- **Room 5 Variant — The Submersible**: Griffin's underwater version of the pressure
+  room. "The buildings are submersible, which are very hot right now." Higher risk,
+  higher reward. If anyone opens a window, everyone gets launched out (wipe mechanic?).
+
+- **Room 5 Variant — The Crusher**: Griffin's walls-and-ceiling version. "My version of
+  the room, where the walls and ceiling come in and try to squish you, isn't all that
+  goofy anymore." Timed mechanic — generators produce at increasing rates but you have
+  to exit before the walls close in or lose progress.
+
+- **Room 7 Variant — Gothic Circus**: Travis's full vision that Griffin vetoed as "Eyes
+  Wide Shut." Gothic ringmaster, full Panic at the Disco aesthetic, trapezes are
+  mandatory not optional. Higher difficulty, more active clicking required.
+
+- **Room 8 Variant — The Two-Day Deception**: Justin's version where the deception
+  lasts weeks. "I think you need at least three weeks of like constant discouragement."
+  Much longer time-gate but massive Vibe payout. For patient players.
+
+- **Room 10 Variant — The Implosion**: Travis's alternative where opening door 10
+  depressurizes the whole rave and it implodes on itself. Different prestige trigger —
+  instead of dethroning the candy king, the entire structure collapses and you wake up
+  in your bed. "That's the end of Plato's Rave, right? It all implodes on itself."
+
+### Design Notes
+- Variants should change the feel/strategy of a run, not just be stat bumps
+- Some variants are harder, some are easier but weirder — no strict power hierarchy
+- Can mix and match variants across rooms for different "builds"
+- Each variant gets its own flavor text and visual theme
+- Unlocking all variants for a room could itself be an achievement
