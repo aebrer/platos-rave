@@ -28,6 +28,17 @@ const ROOMS = {
     optimalPulse: [20, 50],
     artClass: "room-2",
   },
+  3: {
+    name: "Dry Rub Wings",
+    flavor: "We DoorDashed in Buffalo Wild Wings for room three. Dry rub only. Dry rub sauce comes in room six.",
+    unlockCost: 200,
+    baseVibeRate: 5,
+    clickMultiplier: 2,
+    pressureEffect: -1,
+    optimalPressure: [10, 40],
+    optimalPulse: [10, 40],
+    artClass: "room-3",
+  },
 };
 
 
@@ -85,6 +96,33 @@ const ROOM_FLAVOR = {
       "EMPLOYEE ONLY means EMPLOYEE ALSO",
     ],
     npcColors: ["#ff6688", "#aa88ff", "#ffcc44", "#44dddd"],
+    npcCount: 4,
+  },
+  3: {
+    sounds: [
+      "*crunch*", "*munch*", "CHOMP", "*sizzle*", "*snap*",
+      "NOM", "*lick*", "CRACKLE", "*burp*",
+    ],
+    emojis: [
+      "\u{1F357}", "\u{1F356}", "\u{1F525}", "\u{1F9C2}", "\u{1F37A}",
+      "\u{1F9FB}", "\u{1F4A8}", "\u{1F60B}",
+    ],
+    quotes: [
+      "Dry rub is so smart, by the way",
+      "You're gonna want to pace that out",
+      "Best wings in town, honestly",
+      "No sauce for me, thanks",
+      "I came for the wings and I'm leaving",
+      "Is there a non-pressurized exit?",
+      "We got vegan options too, right?",
+      "I like Impossible Nuggets a lot",
+      "Six wings, how fast can you drain 'em?",
+      "These are the checkpoints",
+      "You earned these free buffalo wings",
+      "Sir this is a DoorDash order",
+      "I'm spending some time here",
+    ],
+    npcColors: ["#ff8844", "#ffcc33", "#ee5533", "#ffaa77"],
     npcCount: 4,
   },
 };
@@ -198,6 +236,56 @@ var ROOM_ITEMS = {
       effect: { type: "comfyRange", value: 5 },
     },
   ],
+  3: [
+    {
+      id: "classic_dry_rub",
+      emoji: "\u{1F357}",
+      name: "Classic Dry Rub Wings",
+      desc: "The standard. Dry rub is so smart, by the way, with the evening they're gonna have.",
+      baseCost: 100,
+      effect: { type: "vibeRate", value: 2 },
+    },
+    {
+      id: "boneless_buffalo",
+      emoji: "\u{1F356}",
+      name: "Boneless Buffalo Wings",
+      desc: "They got boneless buffalo wings! You can't start at one because you're filling up too much.",
+      baseCost: 150,
+      effect: { type: "clickPower", value: 3 },
+    },
+    {
+      id: "lemon_pepper_dry",
+      emoji: "\u{1F34B}",
+      name: "Lemon Pepper (Dry)",
+      desc: "A controversial choice. No sauce allowed until room six, so this is the citrus loophole.",
+      baseCost: 180,
+      effect: { type: "vibeRate", value: 4 },
+    },
+    {
+      id: "impossible_nuggets",
+      emoji: "\u{1F966}",
+      name: "Impossible Nuggets",
+      desc: "Vegan options, of course. KFC used to have these and they were great.",
+      baseCost: 200,
+      effect: { type: "vibeRate", value: 5 },
+    },
+    {
+      id: "domestic_beer",
+      emoji: "\u{1F37A}",
+      name: "Domestic Beer",
+      desc: "Well drink tickets provided. No drugs at all. Barely water. But beer? Beer's fine.",
+      baseCost: 250,
+      effect: { type: "clickPower", value: 4 },
+    },
+    {
+      id: "doordash_window",
+      emoji: "\u{1F6D2}",
+      name: "DoorDash Window",
+      desc: "It's a ghost kitchen. We're not making the best wings in town and only giving them to eight people a night.",
+      baseCost: 350,
+      effect: { type: "comfyRange", value: 6 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -239,6 +327,7 @@ function createDefaultState() {
     rooms: {
       1: { unlocked: true, level: 1 },
       2: { unlocked: false, level: 0 },
+      3: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
