@@ -433,6 +433,7 @@ var dom = {
   welcomeBack: document.getElementById("welcome-back"),
   welcomeMessage: document.getElementById("welcome-message"),
   welcomeDismiss: document.getElementById("welcome-dismiss"),
+  spreadLoveBtn: document.getElementById("spread-love-btn"),
 };
 
 // ============================================================
@@ -449,6 +450,9 @@ function renderStats() {
   dom.pulseFill.style.width = s + "%";
   dom.pressureValue.textContent = Math.floor(p);
   dom.pulseValue.textContent = Math.floor(s);
+
+  // Spread the love: enabled when you have at least 1 vibe to spend
+  dom.spreadLoveBtn.disabled = Math.floor(state.vibe * 0.1) < 1;
 }
 
 function renderOptimalRanges() {
@@ -979,6 +983,16 @@ function navigateRoom(direction) {
   renderAll();
 }
 
+function spreadTheLove() {
+  var cost = Math.floor(state.vibe * 0.1);
+  if (cost < 1) return;
+  state.vibe -= cost;
+  state.pressure = clamp(state.pressure * 0.9, 0, 100);
+  renderStats();
+  renderMultiplier();
+  renderNav();
+}
+
 function unlockNextRoom() {
   var nextRoom = state.currentRoom + 1;
   if (!ROOMS[nextRoom]) return;
@@ -1035,6 +1049,7 @@ dom.roomView.addEventListener("pointerdown", handleTap);
 dom.navLeft.addEventListener("click", function(e) { e.stopPropagation(); navigateRoom(-1); });
 dom.navRight.addEventListener("click", function(e) { e.stopPropagation(); navigateRoom(1); });
 dom.unlockButton.addEventListener("click", function(e) { e.stopPropagation(); unlockNextRoom(); });
+dom.spreadLoveBtn.addEventListener("click", function(e) { e.stopPropagation(); spreadTheLove(); });
 
 // Prevent bottom panel and popup taps from triggering room tap
 document.getElementById("bottom-panel").addEventListener("pointerdown", function(e) {

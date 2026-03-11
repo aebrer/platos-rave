@@ -464,9 +464,41 @@ html, body {
   gap: 10px;
 }
 
-/* Vibe counter */
+/* Vibe counter + spread the love */
 #vibe-block {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#vibe-info {
+  text-align: left;
+}
+
+#spread-love-btn {
+  font-family: inherit;
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  cursor: pointer;
+  white-space: nowrap;
+  text-shadow: 0 0 6px var(--cyan-glow);
+  box-shadow: 0 0 8px var(--cyan-glow);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+#spread-love-btn:hover:not(:disabled) {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 0 14px var(--cyan-glow);
+}
+
+#spread-love-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 #vibe-count {
