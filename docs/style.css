@@ -883,6 +883,28 @@ html, body {
 }
 
 /* ============================================================
+   SAVE WARNING
+   ============================================================ */
+.save-warning {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(200, 40, 40, 0.9);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  z-index: 999;
+  animation: save-warn-fade 8s ease-out forwards;
+}
+
+@keyframes save-warn-fade {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ============================================================
    OVERLAY
    ============================================================ */
 .overlay {

@@ -540,9 +540,9 @@ var ROOM_ITEMS = {
       id: "domestic_beer",
       emoji: "\u{1F37A}",
       name: "Domestic Beer",
-      desc: "Well drink tickets provided. No drugs at all. Barely water. But beer? Beer's fine.",
+      desc: "Well drink tickets provided. No drugs at all. Barely water. But beer? Beer's fine. Calms the nerves.",
       baseCost: 250,
-      effect: { type: "clickPower", value: 4 },
+      effect: { type: "pulseDampen", value: 1 },
     },
     {
       id: "doordash_window",
@@ -624,9 +624,9 @@ var ROOM_ITEMS = {
       id: "ginger_ale",
       emoji: "\u{1F9CB}",
       name: "Ginger Ale",
-      desc: "You have a sudden desire for ginger ale. Just like on a plane. It'll be great.",
+      desc: "You have a sudden desire for ginger ale. Just like on a plane. Settles your whole situation.",
       baseCost: 300,
-      effect: { type: "vibeRate", value: 5 },
+      effect: { type: "pulseDampen", value: 1.5 },
     },
     {
       id: "airlock_upgrade",
@@ -798,9 +798,9 @@ var ROOM_ITEMS = {
       id: "employee_handbook",
       emoji: "\u{1F4D5}",
       name: "Employee Handbook",
-      desc: "You have to finish all the tutorial videos and training worksheets. There are so many containers.",
+      desc: "The training videos teach you to stay calm. Breathe. Smile. Sell containers. Your pulse steadies.",
       baseCost: 4500,
-      effect: { type: "comfyRange", value: 12 },
+      effect: { type: "pulseDampen", value: 2 },
     },
   ],
   9: [
@@ -848,9 +848,9 @@ var ROOM_ITEMS = {
       id: "pleasure_garden_bench",
       emoji: "\u{1FAB7}",
       name: "Pleasure Garden Bench",
-      desc: "The eternal afterlife pleasure garden. Pressure and pulse both drift toward perfect equilibrium here.",
+      desc: "The eternal afterlife pleasure garden. You sit, you breathe, your pulse barely registers the dancing.",
       baseCost: 7000,
-      effect: { type: "comfyRange", value: 15 },
+      effect: { type: "pulseDampen", value: 2.5 },
     },
   ],
   10: [
@@ -968,11 +968,28 @@ let state = createDefaultState();
 // Save / Load
 // ============================================================
 
+var saveFailWarned = false;
+
 function saveGame() {
   state.lastSaved = Date.now();
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-  } catch (e) { console.warn("Save failed:", e); }
+    saveFailWarned = false;
+  } catch (e) {
+    console.warn("Save failed:", e);
+    if (!saveFailWarned) {
+      saveFailWarned = true;
+      showSaveWarning();
+    }
+  }
+}
+
+function showSaveWarning() {
+  var el = document.createElement("div");
+  el.className = "save-warning";
+  el.textContent = "Save failed — progress may be lost if you close this tab";
+  document.getElementById("game").appendChild(el);
+  setTimeout(function() { el.remove(); }, 8000);
 }
 
 function loadGame() {
@@ -1026,6 +1043,7 @@ function statFitness(value, range) {
   return Math.max(0, 1 - dist / 50);
 }
 
+// Multiplier from pressure/pulse fitness relative to room's optimal ranges (0.5x–2.0x)
 function getRoomFitMultiplier(roomNum) {
   var room = ROOMS[roomNum];
   if (!room) return 1;
@@ -1037,6 +1055,7 @@ function getRoomFitMultiplier(roomNum) {
   return PENALTY_FLOOR + fit * (OPTIMAL_BONUS - PENALTY_FLOOR);
 }
 
+// Total room multiplier: stat fitness * vibeMultiplier item bonuses
 function getRoomMultiplier(roomNum) {
   return getRoomFitMultiplier(roomNum) * (1 + getItemBonus(roomNum, "vibeMultiplier"));
 }
@@ -1233,6 +1252,7 @@ function renderRoom() {
 }
 
 
+// Returns arrow indicating whether otherVps is higher/lower/equal vs currentVps
 function vpsArrow(otherVps, currentVps) {
   if (otherVps > currentVps) return "\u25B2";   // ▲ higher vps
   if (otherVps < currentVps) return "\u25BC";   // ▼ lower vps
@@ -1610,6 +1630,8 @@ function showItemPopup(data) {
     effectDesc = "+" + data.item.effect.value + " Vibe/s in this room";
   } else if (data.item.effect.type === "vibeMultiplier") {
     effectDesc = "+" + Math.round(data.item.effect.value * 100) + "% Vibe multiplier in this room";
+  } else if (data.item.effect.type === "pulseDampen") {
+    effectDesc = "-" + data.item.effect.value + " pulse per tap in this room";
   } else if (data.item.effect.type === "clickPower") {
     effectDesc = "+" + data.item.effect.value + " click power in this room";
   } else if (data.item.effect.type === "comfyRange") {
@@ -1704,6 +1726,8 @@ function showInventoryDetail(item, count, roomNum) {
     effectDesc = "+" + total + " Vibe/s (" + item.effect.value + " each)";
   } else if (item.effect.type === "vibeMultiplier") {
     effectDesc = "+" + Math.round(total * 100) + "% Vibe multiplier (" + Math.round(item.effect.value * 100) + "% each)";
+  } else if (item.effect.type === "pulseDampen") {
+    effectDesc = "-" + total + " pulse per tap (" + item.effect.value + " each)";
   } else if (item.effect.type === "clickPower") {
     effectDesc = "+" + total + " click power (" + item.effect.value + " each)";
   } else if (item.effect.type === "comfyRange") {
@@ -1738,7 +1762,8 @@ function handleTap(e) {
   var value = getClickValue();
   addVibe(value);
   state.stats.totalClicks++;
-  state.pulse = clamp(state.pulse + PULSE_PER_CLICK, 0, 100);
+  var pulseDampen = getItemBonus(state.currentRoom, "pulseDampen");
+  state.pulse = clamp(state.pulse + Math.max(0, PULSE_PER_CLICK - pulseDampen), 0, 100);
 
   var clientX = e.clientX;
   var clientY = e.clientY;
