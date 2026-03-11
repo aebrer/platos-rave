@@ -140,6 +140,14 @@ var ROOM_ITEMS = {
       baseCost: 35,
       effect: { type: "clickPower", value: 2 },
     },
+    {
+      id: "aromatherapy_diffuser",
+      emoji: "\u{1F9F4}",
+      name: "Aromatherapy Diffuser",
+      desc: "Lavender and bass. Widens the range of vibes that feel right in here.",
+      baseCost: 45,
+      effect: { type: "comfyRange", value: 5 },
+    },
   ],
   2: [
     {
@@ -181,6 +189,14 @@ var ROOM_ITEMS = {
       desc: "The guard nods and looks the other way. Professional courtesy.",
       baseCost: 150,
       effect: { type: "vibeRate", value: 5 },
+    },
+    {
+      id: "warehouse_zen",
+      emoji: "\u{1F9D8}",
+      name: "Warehouse Zen",
+      desc: "A meditation corner behind the pallets. Your comfort zone expands.",
+      baseCost: 80,
+      effect: { type: "comfyRange", value: 5 },
     },
   ],
 };
@@ -292,10 +308,23 @@ function statFitness(value, range) {
 function getRoomMultiplier(roomNum) {
   var room = ROOMS[roomNum];
   if (!room) return 1;
-  var pFit = statFitness(state.pressure, room.optimalPressure);
-  var sFit = statFitness(state.pulse, room.optimalPulse);
+  var pRange = getEffectiveOptimalRange(roomNum, "pressure");
+  var sRange = getEffectiveOptimalRange(roomNum, "pulse");
+  var pFit = statFitness(state.pressure, pRange);
+  var sFit = statFitness(state.pulse, sRange);
   var fit = (pFit + sFit) / 2;
   return PENALTY_FLOOR + fit * (OPTIMAL_BONUS - PENALTY_FLOOR);
+}
+
+function getEffectiveOptimalRange(roomNum, stat) {
+  var room = ROOMS[roomNum];
+  if (!room) return [0, 100];
+  var base = stat === "pressure" ? room.optimalPressure : room.optimalPulse;
+  var expand = getItemBonus(roomNum, "comfyRange");
+  return [
+    Math.max(0, base[0] - expand),
+    Math.min(100, base[1] + expand),
+  ];
 }
 
 function getItemBonus(roomNum, effectType) {
@@ -417,10 +446,13 @@ function renderOptimalRanges() {
   var room = ROOMS[state.currentRoom];
   if (!room) return;
 
-  dom.pressureOptimal.style.left = room.optimalPressure[0] + "%";
-  dom.pressureOptimal.style.width = (room.optimalPressure[1] - room.optimalPressure[0]) + "%";
-  dom.pulseOptimal.style.left = room.optimalPulse[0] + "%";
-  dom.pulseOptimal.style.width = (room.optimalPulse[1] - room.optimalPulse[0]) + "%";
+  var pRange = getEffectiveOptimalRange(state.currentRoom, "pressure");
+  var sRange = getEffectiveOptimalRange(state.currentRoom, "pulse");
+
+  dom.pressureOptimal.style.left = pRange[0] + "%";
+  dom.pressureOptimal.style.width = (pRange[1] - pRange[0]) + "%";
+  dom.pulseOptimal.style.left = sRange[0] + "%";
+  dom.pulseOptimal.style.width = (sRange[1] - sRange[0]) + "%";
 }
 
 function renderRoom() {
@@ -464,23 +496,51 @@ function renderNav() {
 }
 
 function renderMap() {
-  var nodes = dom.roomMap.querySelectorAll(".map-node");
-  for (var i = 0; i < nodes.length; i++) {
-    var roomNum = Number(nodes[i].getAttribute("data-room"));
-    var rs = state.rooms[roomNum];
-    var unlocked = rs && rs.unlocked;
+  // 3 slots centered on current room
+  // Room 0 = mystery "?" (the loop hint), always locked
+  var center = state.currentRoom;
+  var slots = [center - 1, center, center + 1];
 
-    nodes[i].className = "map-node";
-    if (unlocked) {
-      nodes[i].classList.add("unlocked");
-      nodes[i].textContent = String(roomNum);
+  for (var i = 0; i < 3; i++) {
+    var roomNum = slots[i];
+    var node = document.getElementById("map-slot-" + i);
+    var edge = document.getElementById("map-edge-" + i);
+
+    node.className = "map-node";
+
+    if (roomNum === 0) {
+      // Mystery room — the loop
+      node.classList.add("locked");
+      node.textContent = "?";
+    } else if (roomNum < 0) {
+      // Off the map
+      node.classList.add("locked");
+      node.textContent = "";
+      node.style.visibility = "hidden";
+      if (edge) edge.style.visibility = "hidden";
+      continue;
+    } else if (ROOMS[roomNum]) {
+      var rs = state.rooms[roomNum];
+      var unlocked = rs && rs.unlocked;
+      if (unlocked) {
+        node.classList.add("unlocked");
+        node.textContent = String(roomNum);
+      } else {
+        node.classList.add("locked");
+        node.textContent = "?";
+      }
     } else {
-      nodes[i].classList.add("locked");
-      nodes[i].textContent = "?";
+      // Beyond defined rooms
+      node.classList.add("locked");
+      node.textContent = "?";
     }
+
     if (roomNum === state.currentRoom) {
-      nodes[i].classList.add("current");
+      node.classList.add("current");
     }
+
+    node.style.visibility = "";
+    if (edge) edge.style.visibility = "";
   }
 }
 
@@ -765,6 +825,8 @@ function showItemPopup(data) {
     effectDesc = "+" + data.item.effect.value + " Vibe/s in this room";
   } else if (data.item.effect.type === "clickPower") {
     effectDesc = "+" + data.item.effect.value + " click power in this room";
+  } else if (data.item.effect.type === "comfyRange") {
+    effectDesc = "+" + data.item.effect.value + " comfort zone in this room";
   }
 
   document.getElementById("item-popup-emoji").textContent = data.item.emoji;
@@ -785,6 +847,8 @@ function showItemPopup(data) {
     removeActiveItem();
     overlay.classList.add("hidden");
     renderStats();
+    renderOptimalRanges();
+    renderMultiplier();
     renderNav();
     renderInventory();
   };
@@ -846,10 +910,13 @@ function renderInventory() {
 
 function showInventoryDetail(item, count, roomNum) {
   var effectDesc = "";
+  var total = item.effect.value * count;
   if (item.effect.type === "vibeRate") {
-    effectDesc = "+" + (item.effect.value * count) + " Vibe/s (" + item.effect.value + " each)";
+    effectDesc = "+" + total + " Vibe/s (" + item.effect.value + " each)";
   } else if (item.effect.type === "clickPower") {
-    effectDesc = "+" + (item.effect.value * count) + " click power (" + item.effect.value + " each)";
+    effectDesc = "+" + total + " click power (" + item.effect.value + " each)";
+  } else if (item.effect.type === "comfyRange") {
+    effectDesc = "+" + total + " comfort zone (" + item.effect.value + " each)";
   }
 
   document.getElementById("item-popup-emoji").textContent = item.emoji;
