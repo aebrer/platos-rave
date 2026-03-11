@@ -1541,6 +1541,8 @@ function removeActiveItem() {
 // Item Purchase Popup
 // ============================================================
 
+var activePopupCost = null;
+
 function showItemPopup(data) {
   var overlay = document.getElementById("item-popup");
   var owned = 0;
@@ -1548,6 +1550,7 @@ function showItemPopup(data) {
     owned = state.inventory[data.roomNum][data.item.id] || 0;
   }
   var cost = data.cost;
+  activePopupCost = cost;
   var effectDesc = "";
   if (data.item.effect.type === "vibeRate") {
     effectDesc = "+" + data.item.effect.value + " Vibe/s in this room";
@@ -1573,6 +1576,7 @@ function showItemPopup(data) {
     if (!state.inventory[data.roomNum]) state.inventory[data.roomNum] = {};
     state.inventory[data.roomNum][data.item.id] = (state.inventory[data.roomNum][data.item.id] || 0) + 1;
     removeActiveItem();
+    activePopupCost = null;
     overlay.classList.add("hidden");
     renderStats();
     renderOptimalRanges();
@@ -1582,6 +1586,7 @@ function showItemPopup(data) {
   };
 
   document.getElementById("item-popup-dismiss").onclick = function() {
+    activePopupCost = null;
     overlay.classList.add("hidden");
   };
 
@@ -1653,7 +1658,7 @@ function showInventoryDetail(item, count, roomNum) {
   document.getElementById("item-popup-effect").textContent = effectDesc;
   document.getElementById("item-popup-owned").textContent = "Owned: " + count;
   // Hide buy button for inventory detail view
-
+  activePopupCost = null;
   var buyBtn = document.getElementById("item-popup-buy");
   buyBtn.style.display = "none";
 
@@ -1749,6 +1754,14 @@ function gameTick() {
   renderStats();
   renderMultiplier();
   renderNav();
+
+  // Update buy button if item popup is open
+  if (activePopupCost !== null) {
+    var buyBtn = document.getElementById("item-popup-buy");
+    if (buyBtn && buyBtn.style.display !== "none") {
+      buyBtn.disabled = state.vibe < activePopupCost;
+    }
+  }
 
   requestAnimationFrame(gameTick);
 }
