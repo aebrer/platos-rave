@@ -70,14 +70,25 @@ for source material from the podcast. Full searchable transcript at `reference/t
 
 ---
 
-## Current State (v0.1.0)
+## Current State (v0.1.0 + rooms branch)
 
 ### What's Built
 - Full-viewport dungeon crawler layout (mobile-first)
 - Tap-to-dance mechanic with floating +Vibe feedback
-- 2 rooms: Container Store and Cloister of Confidence
+- All 10 rooms with per-room items, NPC quotes, ambient flavor, and textures:
+  1. The Container Store — entry point, calming
+  2. The Cloister of Confidence — warehouse, mild pressure
+  3. Dry Rub Wings — snack checkpoint 1, calming recovery
+  4. The Best Rave of Your Life — peak intensity, high pressure
+  5. Barometric Pressure — the descent, massive pressure
+  6. Sauce on Six — snack checkpoint 2, recovery from barotrauma
+  7. Traps — gothic circus, trap music, trapezes, Trapt on retainer
+  8. The Final Deception — fake Container Store, puzzle room
+  9. Nirvana — transcendence, archivists, pleasure garden
+  10. The Candy King — dark room, single spotlight, prestige trigger
 - Pressure & Pulse stats with per-room optimal ranges and multipliers
 - Optimal range indicators on stat bars (always visible, expand with items)
+- "Spread the Love" button — spend 10% vibes to reduce pressure by 10%
 - Room navigation with unlock mechanic
 - NPC rave attendees (per-room colors, staggered dance animations)
 - Ambient flavor: onomatopoeia, emojis, NPC quotes from the episode
@@ -89,9 +100,9 @@ for source material from the podcast. Full searchable transcript at `reference/t
 - LocalStorage save/load with offline catch-up (24h cap)
 - About page with MBMBaM credits and fan project disclaimer
 - Placeholder room textures (ImageMagick plasma, loaded as tiling PNGs)
+- CNAME for platosrave.club (DNS not configured yet)
 
 ### What's Not Built Yet
-- Rooms 3-10
 - Prestige / Kandi system
 - Real procedural textures (use `/generate-texture` skill when ready)
 - 300-key drop event
@@ -123,7 +134,7 @@ for source material from the podcast. Full searchable transcript at `reference/t
 **Save System**
 - LocalStorage key: `platos-rave-save`
 - JSON schema with a `version` field — bump version to wipe incompatible saves
-- Currently version 3 (added inventory system)
+- Currently version 4 (added rooms 3-10)
 - Early development: breaking save compatibility is acceptable
 - Post-release: migrations required, version field drives this
 
