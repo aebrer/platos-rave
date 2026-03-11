@@ -30,7 +30,6 @@ const ROOMS = {
   },
 };
 
-const TOTAL_ROOMS_ON_MAP = 5; // How many nodes to show on the map strip
 
 // ============================================================
 // Room Ambient Flavor — onomatopoeia, emojis, NPC quotes
@@ -260,7 +259,7 @@ function saveGame() {
   state.lastSaved = Date.now();
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-  } catch (e) { /* silently continue */ }
+  } catch (e) { console.warn("Save failed:", e); }
 }
 
 function loadGame() {
@@ -278,17 +277,18 @@ function loadGame() {
 }
 
 function calculateOfflineEarnings(savedState) {
+  if (!savedState.lastSaved || isNaN(savedState.lastSaved)) return 0;
   var elapsed = Math.min(
     (Date.now() - savedState.lastSaved) / 1000,
     OFFLINE_CAP_SECONDS
   );
-  if (elapsed < 5) return 0;
-  var room = ROOMS[savedState.currentRoom];
-  if (!room) return 0;
-  var level = savedState.rooms[savedState.currentRoom]
-    ? savedState.rooms[savedState.currentRoom].level
-    : 1;
-  return Math.floor(room.baseVibeRate * Math.max(level, 1) * elapsed);
+  if (elapsed < 5 || isNaN(elapsed)) return 0;
+  // Temporarily swap state so getCurrentVibeRate() uses saved inventory/items
+  var prevState = state;
+  state = savedState;
+  var rate = getCurrentVibeRate();
+  state = prevState;
+  return Math.floor(rate * elapsed);
 }
 
 // ============================================================
@@ -385,6 +385,7 @@ function addVibe(amount) {
 // ============================================================
 
 function formatNumber(n) {
+  if (!isFinite(n)) return "0";
   if (n < 1000) return Math.floor(n).toString();
   var suffixes = ["", "K", "M", "B", "T", "Qa", "Qi"];
   var tier = Math.floor(Math.log10(Math.abs(n)) / 3);
@@ -457,6 +458,7 @@ function renderOptimalRanges() {
 
 function renderRoom() {
   var room = ROOMS[state.currentRoom];
+  if (!room) return;
   dom.roomTitle.textContent = "Room " + state.currentRoom + " \u2014 " + room.name;
   dom.roomFlavor.textContent = room.flavor;
 
@@ -472,7 +474,8 @@ function renderMultiplier() {
   }
   dom.multiplier.classList.remove("hidden");
   dom.multiplierValue.textContent = mult.toFixed(1) + "x";
-  dom.multiplier.className = mult >= 1 ? "bonus" : "penalty";
+  dom.multiplier.classList.remove("bonus", "penalty");
+  dom.multiplier.classList.add(mult >= 1 ? "bonus" : "penalty");
 }
 
 function renderNav() {
@@ -587,7 +590,7 @@ function spawnClickPop(value, x, y) {
 
 function triggerDanceAnimation() {
   dom.dancer.classList.remove("dancing", "vibing");
-  void dom.dancer.offsetWidth;
+  void dom.dancer.offsetWidth; // force reflow to restart animation
   dom.dancer.classList.add("dancing");
   // Return to vibing after the dance burst
   setTimeout(function() {
@@ -683,7 +686,7 @@ function spawnAmbientText() {
   var flavor = ROOM_FLAVOR[state.currentRoom];
   if (!flavor) return;
 
-  var container = dom.clickFeedback; // Reuse the overlay layer
+  var container = dom.clickFeedback; // reuse click-feedback layer (same positioning/z-index)
   var roll = Math.random();
   var text;
   var cssClass;
@@ -949,8 +952,8 @@ function handleTap(e) {
   state.stats.totalClicks++;
   state.pulse = clamp(state.pulse + PULSE_PER_CLICK, 0, 100);
 
-  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  var clientX = e.clientX;
+  var clientY = e.clientY;
   spawnClickPop(value, clientX, clientY);
   triggerDanceAnimation();
 
@@ -1049,6 +1052,13 @@ function init() {
 
   if (saved) {
     var offlineEarnings = calculateOfflineEarnings(saved);
+    // Merge saved onto defaults so any missing fields get safe values
+    var defaults = createDefaultState();
+    for (var key in defaults) {
+      if (saved[key] === undefined) saved[key] = defaults[key];
+    }
+    if (!saved.stats) saved.stats = defaults.stats;
+    if (!saved.inventory) saved.inventory = defaults.inventory;
     state = saved;
 
     if (offlineEarnings > 0) {
