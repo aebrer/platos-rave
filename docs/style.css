@@ -395,19 +395,19 @@ html, body {
 @keyframes ambient-drift {
   0% {
     opacity: 0;
-    transform: translateY(0) scale(0.8);
+    transform: translateX(var(--x-shift, 0)) translateY(0) scale(0.8);
   }
   15% {
     opacity: 1;
-    transform: translateY(-5px) scale(1);
+    transform: translateX(var(--x-shift, 0)) translateY(-5px) scale(1);
   }
   70% {
     opacity: 0.7;
-    transform: translateY(-25px) scale(1);
+    transform: translateX(var(--x-shift, 0)) translateY(-25px) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-45px) scale(0.9);
+    transform: translateX(var(--x-shift, 0)) translateY(-45px) scale(0.9);
   }
 }
 

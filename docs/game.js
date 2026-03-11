@@ -32,7 +32,7 @@ const ROOMS = {
     name: "Dry Rub Wings",
     flavor: "We DoorDashed in Buffalo Wild Wings for room three. Dry rub only. Dry rub sauce comes in room six.",
     unlockCost: 200,
-    baseVibeRate: 5,
+    baseVibeRate: 7,
     clickMultiplier: 2,
     pressureEffect: -1,
     optimalPressure: [10, 40],
@@ -43,7 +43,7 @@ const ROOMS = {
     name: "The Best Rave of Your Life",
     flavor: "Fucking out of control. The best, fucking hardest rave you've ever been to in your whole life.",
     unlockCost: 600,
-    baseVibeRate: 10,
+    baseVibeRate: 18,
     clickMultiplier: 4,
     pressureEffect: 3,
     optimalPressure: [40, 70],
@@ -54,7 +54,7 @@ const ROOMS = {
     name: "Barometric Pressure",
     flavor: "You're gonna feel the pressure on your body. Your ears are gonna pop. It's like you're lowering down in the ocean.",
     unlockCost: 1500,
-    baseVibeRate: 8,
+    baseVibeRate: 14,
     clickMultiplier: 3,
     pressureEffect: 5,
     optimalPressure: [55, 85],
@@ -65,7 +65,7 @@ const ROOMS = {
     name: "Sauce on Six",
     flavor: "The sauce brings you back from the intense barotrauma. After the barotrauma, they're gonna taste like the best fuckin' wings.",
     unlockCost: 4000,
-    baseVibeRate: 12,
+    baseVibeRate: 30,
     clickMultiplier: 3,
     pressureEffect: -3,
     optimalPressure: [20, 55],
@@ -76,7 +76,7 @@ const ROOMS = {
     name: "Traps",
     flavor: "All traps. Trap music. Trap drums. People with big trap muscles watching you. Trapezes to swing over the traps. Gothic circus. You'll love it.",
     unlockCost: 10000,
-    baseVibeRate: 15,
+    baseVibeRate: 50,
     clickMultiplier: 5,
     pressureEffect: 2.5,
     optimalPressure: [35, 65],
@@ -87,7 +87,7 @@ const ROOMS = {
     name: "The Final Deception",
     flavor: "The Container Store again. They want you to think you failed. There is no level eight, nine or ten. This is all we've made.",
     unlockCost: 25000,
-    baseVibeRate: 10,
+    baseVibeRate: 55,
     clickMultiplier: 3,
     pressureEffect: 0,
     optimalPressure: [25, 75],
@@ -98,7 +98,7 @@ const ROOMS = {
     name: "Nirvana",
     flavor: "Nine is nirvana, baby. Nine is the best, objectively the best layer. Nine is the best rave. You don't want to leave.",
     unlockCost: 75000,
-    baseVibeRate: 20,
+    baseVibeRate: 80,
     clickMultiplier: 4,
     pressureEffect: -2,
     optimalPressure: [20, 60],
@@ -109,7 +109,7 @@ const ROOMS = {
     name: "The Candy King",
     flavor: "A dark room. One man. Candy crown of beads. Just hard candy regalia. A single spotlight. He looks down at you.",
     unlockCost: 200000,
-    baseVibeRate: 5,
+    baseVibeRate: 10,
     clickMultiplier: 10,
     pressureEffect: 0,
     optimalPressure: [0, 100],
@@ -609,7 +609,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4CA}",
       name: "Pressure Gauge",
       desc: "Monitoring the descent. The needle keeps going. This is fine.",
-      baseCost: 800,
+      baseCost: 400,
       effect: { type: "vibeRate", value: 7 },
     },
     {
@@ -617,7 +617,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1FA7C}",
       name: "Dive Helmet",
       desc: "For the rapid descent. Your ears thank you. Your brain does not.",
-      baseCost: 1000,
+      baseCost: 500,
       effect: { type: "clickPower", value: 7 },
     },
     {
@@ -625,7 +625,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F9CB}",
       name: "Ginger Ale",
       desc: "You have a sudden desire for ginger ale. Just like on a plane. It'll be great.",
-      baseCost: 600,
+      baseCost: 300,
       effect: { type: "vibeRate", value: 5 },
     },
     {
@@ -633,7 +633,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F6AA}",
       name: "Airlock Upgrade",
       desc: "The bathroom between four and five, improved. Better seal. Smoother pressurization. No blow-outs.",
-      baseCost: 1200,
+      baseCost: 600,
       effect: { type: "comfyRange", value: 8 },
     },
     {
@@ -641,15 +641,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F6F8}",
       name: "Submarine Porthole",
       desc: "A window to the deep. Don't open it — if anyone opens a window, everyone gets launched out.",
-      baseCost: 1500,
-      effect: { type: "vibeRate", value: 12 },
+      baseCost: 750,
+      effect: { type: "vibeMultiplier", value: 0.15 },
     },
     {
       id: "ear_plugs",
       emoji: "\u{1F9F7}",
       name: "Pressure Ear Plugs",
       desc: "Not for noise — for equalization. Your eardrums were never designed for this.",
-      baseCost: 900,
+      baseCost: 450,
       effect: { type: "clickPower", value: 8 },
     },
   ],
@@ -659,7 +659,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F357}",
       name: "Buffalo Sauce Wings",
       desc: "Finally. SAUCE. The sauce brings you back from the intense barotrauma.",
-      baseCost: 2000,
+      baseCost: 800,
       effect: { type: "vibeRate", value: 10 },
     },
     {
@@ -667,7 +667,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F96D}",
       name: "Mango Habanero",
       desc: "Sweet heat. Your taste buds are so scrambled from the pressure that this tastes like enlightenment.",
-      baseCost: 2500,
+      baseCost: 1200,
       effect: { type: "vibeRate", value: 12 },
     },
     {
@@ -675,7 +675,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F9C4}",
       name: "Garlic Parmesan (Wet)",
       desc: "The sophisticated choice. You've earned this. You survived barometric trauma for this.",
-      baseCost: 2200,
+      baseCost: 1000,
       effect: { type: "clickPower", value: 10 },
     },
     {
@@ -683,7 +683,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F36F}",
       name: "Honey BBQ",
       desc: "Sticky. Messy. Perfect. The wet wings go SO MUCH FASTER for some reason.",
-      baseCost: 1800,
+      baseCost: 900,
       effect: { type: "clickPower", value: 8 },
     },
     {
@@ -691,15 +691,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F47B}",
       name: "Ghost Kitchen Pass",
       desc: "DoorDash window, underground. We're not making the best wings in town and only giving them to eight people a night.",
-      baseCost: 3000,
-      effect: { type: "vibeRate", value: 15 },
+      baseCost: 1500,
+      effect: { type: "vibeMultiplier", value: 0.15 },
     },
     {
       id: "decompression_booth",
       emoji: "\u{1F6CB}\u{FE0F}",
       name: "Decompression Booth",
       desc: "A pressurized recovery pod. The sauce alone brings you back, but this helps too.",
-      baseCost: 3500,
+      baseCost: 1800,
       effect: { type: "comfyRange", value: 10 },
     },
   ],
@@ -709,7 +709,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F3AA}",
       name: "Trapeze Rig",
       desc: "Trapezes above. Having some fun. But oh man, you do need the trapezes to get past the traps.",
-      baseCost: 5000,
+      baseCost: 1500,
       effect: { type: "vibeRate", value: 12 },
     },
     {
@@ -717,15 +717,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F52E}",
       name: "Prism",
       desc: "If you brought a prism, you can get out of here in a few minutes. Otherwise, gargoyle eye socket. Whole thing.",
-      baseCost: 8000,
-      effect: { type: "vibeRate", value: 18 },
+      baseCost: 3500,
+      effect: { type: "vibeMultiplier", value: 0.2 },
     },
     {
       id: "staind_earplugs",
       emoji: "\u{1F3B5}",
       name: "Staind-Brand Earplugs",
       desc: "Special Staind-brand earplugs to block out Trapt's music. We'll know.",
-      baseCost: 4000,
+      baseCost: 2000,
       effect: { type: "clickPower", value: 10 },
     },
     {
@@ -733,7 +733,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F3A9}",
       name: "Gothic Ringmaster Hat",
       desc: "Now it's feeling like Eyes Wide Shut and that bores the shit out of me. But the hat stays.",
-      baseCost: 6000,
+      baseCost: 2500,
       effect: { type: "clickPower", value: 12 },
     },
     {
@@ -741,7 +741,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4D6}",
       name: "Latin Phrasebook",
       desc: "If you already speak Latin, this room goes faster. If not, start studying. Carpe trappem.",
-      baseCost: 7000,
+      baseCost: 3000,
       effect: { type: "vibeRate", value: 15 },
     },
     {
@@ -749,7 +749,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F9E4}",
       name: "Trap Padding",
       desc: "Maybe you're strong. Maybe you just run across the traps and you get a little bit hurt. Less hurt now.",
-      baseCost: 6500,
+      baseCost: 2800,
       effect: { type: "comfyRange", value: 10 },
     },
   ],
@@ -759,7 +759,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F50D}",
       name: "Magnifying Glass",
       desc: "For reading receipts. One of them says 'The Cantainer Store.' That's your golden ticket.",
-      baseCost: 12000,
+      baseCost: 2000,
       effect: { type: "vibeRate", value: 14 },
     },
     {
@@ -767,15 +767,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4DB}",
       name: "Fake Name Tag",
       desc: "It says 'ASSOCIATE' and no one questions it. You are also a Container Store employee, sort of legally, for tax reasons.",
-      baseCost: 15000,
-      effect: { type: "vibeRate", value: 18 },
+      baseCost: 4000,
+      effect: { type: "vibeMultiplier", value: 0.2 },
     },
     {
       id: "actor_headshot",
       emoji: "\u{1F4F8}",
       name: "Actor's Headshot",
       desc: "Dropped by one of the actors selling containers to actors. Proof this isn't real.",
-      baseCost: 10000,
+      baseCost: 2500,
       effect: { type: "clickPower", value: 12 },
     },
     {
@@ -783,7 +783,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4E6}",
       name: "Suspicious Container",
       desc: "What do they ship the containers in? Other containers. It's containers all the way down.",
-      baseCost: 14000,
+      baseCost: 3500,
       effect: { type: "clickPower", value: 15 },
     },
     {
@@ -791,15 +791,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F9FE}",
       name: "Cantainer Store Receipt",
       desc: "You found it. One receipt. One till. 'The Cantainer Store.' Boom. You solved it. You're ready.",
-      baseCost: 20000,
-      effect: { type: "vibeRate", value: 22 },
+      baseCost: 5000,
+      effect: { type: "vibeMultiplier", value: 0.2 },
     },
     {
       id: "employee_handbook",
       emoji: "\u{1F4D5}",
       name: "Employee Handbook",
       desc: "You have to finish all the tutorial videos and training worksheets. There are so many containers.",
-      baseCost: 18000,
+      baseCost: 4500,
       effect: { type: "comfyRange", value: 12 },
     },
   ],
@@ -809,7 +809,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F9D9}",
       name: "Archivist's Robes",
       desc: "They've eschewed raving and devoted themselves to scholarship. You look the part now.",
-      baseCost: 40000,
+      baseCost: 3000,
       effect: { type: "vibeRate", value: 20 },
     },
     {
@@ -817,15 +817,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F5BC}\u{FE0F}",
       name: "Tunnel Photos",
       desc: "Pictures of your life. Your highest moments. Your greatest times. The long tunnel to room ten.",
-      baseCost: 50000,
-      effect: { type: "vibeRate", value: 25 },
+      baseCost: 6000,
+      effect: { type: "vibeMultiplier", value: 0.25 },
     },
     {
       id: "nirvana_snacks",
       emoji: "\u{1F370}",
       name: "Nirvana Snacks",
       desc: "Third snack checkpoint. These aren't wings. These are transcendent. You've earned this.",
-      baseCost: 35000,
+      baseCost: 4000,
       effect: { type: "clickPower", value: 18 },
     },
     {
@@ -833,15 +833,15 @@ var ROOM_ITEMS = {
       emoji: "\u{1F3B6}",
       name: "My Life Is Better With You",
       desc: "A level nine slapper by Montaigne. It will be featured at Plato's Rave. That's a guarantee.",
-      baseCost: 60000,
-      effect: { type: "vibeRate", value: 30 },
+      baseCost: 8000,
+      effect: { type: "vibeMultiplier", value: 0.2 },
     },
     {
       id: "archivist_journal",
       emoji: "\u{1F4D3}",
       name: "Archivist's Journal",
       desc: "If people aren't cataloging the events of the rave, what are we even doing? Important scholarship.",
-      baseCost: 45000,
+      baseCost: 5000,
       effect: { type: "clickPower", value: 20 },
     },
     {
@@ -849,7 +849,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1FAB7}",
       name: "Pleasure Garden Bench",
       desc: "The eternal afterlife pleasure garden. Pressure and pulse both drift toward perfect equilibrium here.",
-      baseCost: 55000,
+      baseCost: 7000,
       effect: { type: "comfyRange", value: 15 },
     },
   ],
@@ -859,7 +859,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4FF}",
       name: "Candy Bracelet",
       desc: "Kandi, in rave parlance. The king's currency. Each one brings you closer to the throne.",
-      baseCost: 100000,
+      baseCost: 5000,
       effect: { type: "clickPower", value: 25 },
     },
     {
@@ -867,7 +867,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F97E}",
       name: "Fuzzy Boots",
       desc: "The king wears them. One man, dressed all wild. Fuzzy boots. You need a pair.",
-      baseCost: 120000,
+      baseCost: 8000,
       effect: { type: "clickPower", value: 30 },
     },
     {
@@ -875,7 +875,7 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4A1}",
       name: "Spotlight Bulb",
       desc: "A single spotlight illuminates you when you walk in. A brighter bulb means a brighter moment.",
-      baseCost: 150000,
+      baseCost: 10000,
       effect: { type: "vibeRate", value: 20 },
     },
     {
@@ -883,23 +883,23 @@ var ROOM_ITEMS = {
       emoji: "\u{1F4C4}",
       name: "Franchise Papers",
       desc: "When you make it to room ten, you become a Plato's Rave franchisee. Sign here.",
-      baseCost: 200000,
-      effect: { type: "vibeRate", value: 35 },
+      baseCost: 15000,
+      effect: { type: "vibeMultiplier", value: 0.25 },
     },
     {
       id: "candy_crown",
       emoji: "\u{1F451}",
       name: "Candy Crown of Beads",
       desc: "Just hard candy regalia. The crown sits heavy. You know what it means to wear it.",
-      baseCost: 250000,
-      effect: { type: "vibeRate", value: 50 },
+      baseCost: 20000,
+      effect: { type: "vibeMultiplier", value: 0.3 },
     },
     {
       id: "throne_cushion",
       emoji: "\u{1FA91}",
       name: "Throne Cushion",
       desc: "The king's throne is beautiful but uncomfortable. This helps. You're going to be here a while.",
-      baseCost: 180000,
+      baseCost: 12000,
       effect: { type: "comfyRange", value: 20 },
     },
   ],
@@ -1026,7 +1026,7 @@ function statFitness(value, range) {
   return Math.max(0, 1 - dist / 50);
 }
 
-function getRoomMultiplier(roomNum) {
+function getRoomFitMultiplier(roomNum) {
   var room = ROOMS[roomNum];
   if (!room) return 1;
   var pRange = getEffectiveOptimalRange(roomNum, "pressure");
@@ -1035,6 +1035,10 @@ function getRoomMultiplier(roomNum) {
   var sFit = statFitness(state.pulse, sRange);
   var fit = (pFit + sFit) / 2;
   return PENALTY_FLOOR + fit * (OPTIMAL_BONUS - PENALTY_FLOOR);
+}
+
+function getRoomMultiplier(roomNum) {
+  return getRoomFitMultiplier(roomNum) * (1 + getItemBonus(roomNum, "vibeMultiplier"));
 }
 
 function getEffectiveOptimalRange(roomNum, stat) {
@@ -1159,6 +1163,7 @@ var dom = {
   breakdownBase: document.getElementById("breakdown-base"),
   breakdownItems: document.getElementById("breakdown-items"),
   breakdownMult: document.getElementById("breakdown-mult"),
+  breakdownClick: document.getElementById("breakdown-click"),
   breakdownPressure: document.getElementById("breakdown-pressure"),
   navLeftVps: document.getElementById("nav-left-vps"),
   navRightVps: document.getElementById("nav-right-vps"),
@@ -1186,11 +1191,14 @@ function renderStats() {
     var level = (rs && rs.level) ? rs.level : 1;
     var base = room.baseVibeRate * level;
     var itemBonus = getItemBonus(state.currentRoom, "vibeRate");
-    var mult = getRoomMultiplier(state.currentRoom);
+    var fitMult = getRoomFitMultiplier(state.currentRoom);
+    var itemMult = 1 + getItemBonus(state.currentRoom, "vibeMultiplier");
+    var totalMult = fitMult * itemMult;
     dom.breakdownBase.textContent = formatNumber(base) + "/s";
     dom.breakdownItems.textContent = "+" + formatNumber(itemBonus) + "/s";
-    dom.breakdownMult.textContent = mult.toFixed(1) + "x";
-    dom.breakdownMult.className = mult >= 1 ? "bonus" : "penalty";
+    dom.breakdownMult.textContent = totalMult.toFixed(1) + "x";
+    dom.breakdownMult.className = totalMult >= 1 ? "bonus" : "penalty";
+    dom.breakdownClick.textContent = formatNumber(getClickValue()) + "/tap";
     var pe = room.pressureEffect;
     var pressureText = pe < 0 ? "Calming" : pe === 0 ? "Neutral" : "Intense";
     if (Math.abs(pe) >= 3) pressureText = pe < 0 ? "Very Calming" : "Very Intense";
@@ -1225,12 +1233,10 @@ function renderRoom() {
 }
 
 
-function pressureArrow(effect) {
-  if (effect <= -2) return "\u25BC\u25BC";     // ▼▼ strong calm
-  if (effect < 0) return "\u25BC";              // ▼ calm
-  if (effect === 0) return "\u2014";            // — neutral
-  if (effect <= 2) return "\u25B2";             // ▲ pressure
-  return "\u25B2\u25B2";                        // ▲▲ heavy pressure
+function vpsArrow(otherVps, currentVps) {
+  if (otherVps > currentVps) return "\u25B2";   // ▲ higher vps
+  if (otherVps < currentVps) return "\u25BC";   // ▼ lower vps
+  return "\u2014";                              // — same
 }
 
 function renderNav() {
@@ -1244,18 +1250,18 @@ function renderNav() {
   dom.navRight.disabled = !nextUnlocked;
 
   // VPS preview on nav buttons
+  var currentVps = getVibeRateForRoom(state.currentRoom);
+
   if (!dom.navLeft.disabled && ROOMS[prevRoom]) {
     var prevVps = getVibeRateForRoom(prevRoom);
-    var prevPressure = ROOMS[prevRoom].pressureEffect;
-    dom.navLeftVps.textContent = formatNumber(prevVps) + "/s " + pressureArrow(prevPressure);
+    dom.navLeftVps.textContent = formatNumber(prevVps) + "/s " + vpsArrow(prevVps, currentVps);
   } else {
     dom.navLeftVps.textContent = "";
   }
 
   if (!dom.navRight.disabled && ROOMS[nextRoom]) {
     var nextVps = getVibeRateForRoom(nextRoom);
-    var nextPressure = ROOMS[nextRoom].pressureEffect;
-    dom.navRightVps.textContent = formatNumber(nextVps) + "/s " + pressureArrow(nextPressure);
+    dom.navRightVps.textContent = formatNumber(nextVps) + "/s " + vpsArrow(nextVps, currentVps);
   } else {
     dom.navRightVps.textContent = "";
   }
@@ -1481,11 +1487,12 @@ function spawnAmbientText() {
   el.className = "ambient-pop " + cssClass;
   el.textContent = text;
 
-  // Random position across the room
+  // Random position across the room, shift anchor to avoid right-edge cutoff
   var xPos = 5 + Math.random() * 90;
   var yPos = 20 + Math.random() * 60;
   el.style.left = xPos + "%";
   el.style.top = yPos + "%";
+  el.style.setProperty("--x-shift", "-" + Math.round(xPos) + "%");
 
   container.appendChild(el);
   el.addEventListener("animationend", function() { el.remove(); });
@@ -1601,6 +1608,8 @@ function showItemPopup(data) {
   var effectDesc = "";
   if (data.item.effect.type === "vibeRate") {
     effectDesc = "+" + data.item.effect.value + " Vibe/s in this room";
+  } else if (data.item.effect.type === "vibeMultiplier") {
+    effectDesc = "+" + Math.round(data.item.effect.value * 100) + "% Vibe multiplier in this room";
   } else if (data.item.effect.type === "clickPower") {
     effectDesc = "+" + data.item.effect.value + " click power in this room";
   } else if (data.item.effect.type === "comfyRange") {
@@ -1693,6 +1702,8 @@ function showInventoryDetail(item, count, roomNum) {
   var total = item.effect.value * count;
   if (item.effect.type === "vibeRate") {
     effectDesc = "+" + total + " Vibe/s (" + item.effect.value + " each)";
+  } else if (item.effect.type === "vibeMultiplier") {
+    effectDesc = "+" + Math.round(total * 100) + "% Vibe multiplier (" + Math.round(item.effect.value * 100) + "% each)";
   } else if (item.effect.type === "clickPower") {
     effectDesc = "+" + total + " click power (" + item.effect.value + " each)";
   } else if (item.effect.type === "comfyRange") {
