@@ -94,6 +94,17 @@ const ROOMS = {
     optimalPulse: [25, 75],
     artClass: "room-8",
   },
+  9: {
+    name: "Nirvana",
+    flavor: "Nine is nirvana, baby. Nine is the best, objectively the best layer. Nine is the best rave. You don't want to leave.",
+    unlockCost: 75000,
+    baseVibeRate: 20,
+    clickMultiplier: 4,
+    pressureEffect: -2,
+    optimalPressure: [20, 60],
+    optimalPulse: [20, 60],
+    artClass: "room-9",
+  },
 };
 
 
@@ -315,6 +326,34 @@ const ROOM_FLAVOR = {
     ],
     npcColors: ["#6688aa", "#88aa88", "#aa8866", "#8888aa", "#77aa77"],
     npcCount: 5,
+  },
+  9: {
+    sounds: [
+      "*bliss*", "ahhhhh", "*chime*", "*harp*", "*sigh*",
+      "ohhhhm", "*bells*", "*wind*", "*birdsong*",
+    ],
+    emojis: [
+      "\u{2728}", "\u{1F31F}", "\u{1F54A}\u{FE0F}", "\u{1F338}", "\u{1F3B6}",
+      "\u{1F9D8}", "\u{1F30C}", "\u{1F49C}",
+    ],
+    quotes: [
+      "Nine is nirvana, baby",
+      "This is the transcendent experience you wanted",
+      "You can't get out of nine until you don't want to go to ten",
+      "You can't get to ten unless you're perfectly happy being in nine",
+      "I really feel like there needs to be an archivist wing",
+      "They've eschewed raving and devoted themselves to scholarship",
+      "There's a long tunnel with pictures of your life",
+      "Your highest moments. Your greatest times.",
+      "The wisdom you bring from being ready to leave nine",
+      "This is a level nine slapper, folks",
+      "My Life Is Better With You",
+      "The eternal afterlife pleasure garden",
+      "I never want to leave",
+      "Maybe you don't want to leave nine. And that's okay.",
+    ],
+    npcColors: ["#ffcc88", "#ffd700", "#ffee99", "#ffbb44", "#fff4cc"],
+    npcCount: 6,
   },
 };
 
@@ -727,6 +766,56 @@ var ROOM_ITEMS = {
       effect: { type: "comfyRange", value: 12 },
     },
   ],
+  9: [
+    {
+      id: "archivist_robes",
+      emoji: "\u{1F9D9}",
+      name: "Archivist's Robes",
+      desc: "They've eschewed raving and devoted themselves to scholarship. You look the part now.",
+      baseCost: 40000,
+      effect: { type: "vibeRate", value: 20 },
+    },
+    {
+      id: "tunnel_photos",
+      emoji: "\u{1F5BC}\u{FE0F}",
+      name: "Tunnel Photos",
+      desc: "Pictures of your life. Your highest moments. Your greatest times. The long tunnel to room ten.",
+      baseCost: 50000,
+      effect: { type: "vibeRate", value: 25 },
+    },
+    {
+      id: "nirvana_snacks",
+      emoji: "\u{1F370}",
+      name: "Nirvana Snacks",
+      desc: "Third snack checkpoint. These aren't wings. These are transcendent. You've earned this.",
+      baseCost: 35000,
+      effect: { type: "clickPower", value: 18 },
+    },
+    {
+      id: "montaigne_vinyl",
+      emoji: "\u{1F3B6}",
+      name: "My Life Is Better With You",
+      desc: "A level nine slapper by Montaigne. It will be featured at Plato's Rave. That's a guarantee.",
+      baseCost: 60000,
+      effect: { type: "vibeRate", value: 30 },
+    },
+    {
+      id: "archivist_journal",
+      emoji: "\u{1F4D3}",
+      name: "Archivist's Journal",
+      desc: "If people aren't cataloging the events of the rave, what are we even doing? Important scholarship.",
+      baseCost: 45000,
+      effect: { type: "clickPower", value: 20 },
+    },
+    {
+      id: "pleasure_garden_bench",
+      emoji: "\u{1FAB7}",
+      name: "Pleasure Garden Bench",
+      desc: "The eternal afterlife pleasure garden. Pressure and pulse both drift toward perfect equilibrium here.",
+      baseCost: 55000,
+      effect: { type: "comfyRange", value: 15 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -774,6 +863,7 @@ function createDefaultState() {
       6: { unlocked: false, level: 0 },
       7: { unlocked: false, level: 0 },
       8: { unlocked: false, level: 0 },
+      9: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
