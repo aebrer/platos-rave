@@ -61,6 +61,17 @@ const ROOMS = {
     optimalPulse: [30, 60],
     artClass: "room-5",
   },
+  6: {
+    name: "Sauce on Six",
+    flavor: "The sauce brings you back from the intense barotrauma. After the barotrauma, they're gonna taste like the best fuckin' wings.",
+    unlockCost: 4000,
+    baseVibeRate: 12,
+    clickMultiplier: 3,
+    pressureEffect: -3,
+    optimalPressure: [20, 55],
+    optimalPulse: [15, 50],
+    artClass: "room-6",
+  },
 };
 
 
@@ -198,6 +209,33 @@ const ROOM_FLAVOR = {
       "If anyone opens a window, everyone gets launched out",
     ],
     npcColors: ["#4466aa", "#6688cc", "#335588", "#7799dd", "#2244aa"],
+    npcCount: 5,
+  },
+  6: {
+    sounds: [
+      "*slurp*", "*drip*", "SAUCE", "*splash*", "*sizzle*",
+      "NOM NOM", "*squelch*", "GLORIOUS", "*chomp*",
+    ],
+    emojis: [
+      "\u{1F357}", "\u{1F525}", "\u{1F4A6}", "\u{1F37A}", "\u{1F92E}",
+      "\u{1F924}", "\u{1F60B}", "\u{1F973}",
+    ],
+    quotes: [
+      "SAUCE ON SIX",
+      "The sauce brings you back",
+      "After the barotrauma, these taste like the best fuckin' wings",
+      "The wet wings are SO MUCH FASTER for some reason",
+      "There are real wild folks who come here just for the sauced wings",
+      "We don't know how drugs would interact with sauce",
+      "You could just have dry rub but you chose barometric trauma instead",
+      "This is also a ghost kitchen",
+      "There's barely water. Barely water.",
+      "Travis is right on this one. We have to respect the genius.",
+      "Don't try to ration them for the later layers",
+      "If we want the sauces to taste right, we needed the barotrauma",
+      "I came for the exit on six and I'm not ashamed",
+    ],
+    npcColors: ["#ff6633", "#ff9944", "#cc4411", "#ffbb55", "#ee7722"],
     npcCount: 5,
   },
 };
@@ -461,6 +499,56 @@ var ROOM_ITEMS = {
       effect: { type: "clickPower", value: 8 },
     },
   ],
+  6: [
+    {
+      id: "buffalo_sauce_wings",
+      emoji: "\u{1F357}",
+      name: "Buffalo Sauce Wings",
+      desc: "Finally. SAUCE. The sauce brings you back from the intense barotrauma.",
+      baseCost: 2000,
+      effect: { type: "vibeRate", value: 10 },
+    },
+    {
+      id: "mango_habanero",
+      emoji: "\u{1F96D}",
+      name: "Mango Habanero",
+      desc: "Sweet heat. Your taste buds are so scrambled from the pressure that this tastes like enlightenment.",
+      baseCost: 2500,
+      effect: { type: "vibeRate", value: 12 },
+    },
+    {
+      id: "garlic_parm_wet",
+      emoji: "\u{1F9C4}",
+      name: "Garlic Parmesan (Wet)",
+      desc: "The sophisticated choice. You've earned this. You survived barometric trauma for this.",
+      baseCost: 2200,
+      effect: { type: "clickPower", value: 10 },
+    },
+    {
+      id: "honey_bbq",
+      emoji: "\u{1F36F}",
+      name: "Honey BBQ",
+      desc: "Sticky. Messy. Perfect. The wet wings go SO MUCH FASTER for some reason.",
+      baseCost: 1800,
+      effect: { type: "clickPower", value: 8 },
+    },
+    {
+      id: "ghost_kitchen_pass",
+      emoji: "\u{1F47B}",
+      name: "Ghost Kitchen Pass",
+      desc: "DoorDash window, underground. We're not making the best wings in town and only giving them to eight people a night.",
+      baseCost: 3000,
+      effect: { type: "vibeRate", value: 15 },
+    },
+    {
+      id: "decompression_booth",
+      emoji: "\u{1F6CB}\u{FE0F}",
+      name: "Decompression Booth",
+      desc: "A pressurized recovery pod. The sauce alone brings you back, but this helps too.",
+      baseCost: 3500,
+      effect: { type: "comfyRange", value: 10 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -505,6 +593,7 @@ function createDefaultState() {
       3: { unlocked: false, level: 0 },
       4: { unlocked: false, level: 0 },
       5: { unlocked: false, level: 0 },
+      6: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
