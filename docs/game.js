@@ -32,7 +32,7 @@ const ROOMS = {
 
 
 // ============================================================
-// Room Ambient Flavor — onomatopoeia, emojis, NPC quotes
+// Room Ambient Flavor + NPC Config — onomatopoeia, emojis, NPC quotes, NPC appearance
 // ============================================================
 
 const ROOM_FLAVOR = {
@@ -272,6 +272,7 @@ function loadGame() {
     localStorage.removeItem(SAVE_KEY);
     return null;
   } catch (e) {
+    console.warn("Load failed:", e);
     return null;
   }
 }
@@ -286,8 +287,15 @@ function calculateOfflineEarnings(savedState) {
   // Temporarily swap state so getCurrentVibeRate() uses saved inventory/items
   var prevState = state;
   state = savedState;
-  var rate = getCurrentVibeRate();
-  state = prevState;
+  var rate;
+  try {
+    rate = getCurrentVibeRate();
+  } catch (e) {
+    console.warn("Offline rate calc failed:", e);
+    rate = 0;
+  } finally {
+    state = prevState;
+  }
   return Math.floor(rate * elapsed);
 }
 
@@ -787,7 +795,7 @@ function spawnItem() {
   el.addEventListener("pointerdown", function(e) {
     e.stopPropagation();
     e.preventDefault();
-    showItemPopup(activeItemData);
+    if (activeItemData) showItemPopup(activeItemData);
   });
 
   document.getElementById("room-space").appendChild(el);
@@ -1051,7 +1059,6 @@ function init() {
   var saved = loadGame();
 
   if (saved) {
-    var offlineEarnings = calculateOfflineEarnings(saved);
     // Merge saved onto defaults so any missing fields get safe values
     var defaults = createDefaultState();
     for (var key in defaults) {
@@ -1059,6 +1066,8 @@ function init() {
     }
     if (!saved.stats) saved.stats = defaults.stats;
     if (!saved.inventory) saved.inventory = defaults.inventory;
+
+    var offlineEarnings = calculateOfflineEarnings(saved);
     state = saved;
 
     if (offlineEarnings > 0) {

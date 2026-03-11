@@ -138,7 +138,7 @@ html, body {
 }
 
 /* ============================================================
-   THE ROOM — isometric dungeon space
+   THE ROOM — perspective dungeon space
    ============================================================ */
 #room-view {
   flex: 1;
