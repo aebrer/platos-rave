@@ -202,6 +202,8 @@ html, body {
 #room-space.room-8 #floor-plane { background-image: url(assets/rooms/room8_floor.png); }
 #room-space.room-9 #back-wall { background-image: url(assets/rooms/room9_wall.png); }
 #room-space.room-9 #floor-plane { background-image: url(assets/rooms/room9_floor.png); }
+#room-space.room-10 #back-wall { background-image: url(assets/rooms/room10_wall.png); }
+#room-space.room-10 #floor-plane { background-image: url(assets/rooms/room10_floor.png); }
 
 /* === Room props (decorative elements per room) === */
 #room-props {

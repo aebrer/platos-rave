@@ -105,6 +105,17 @@ const ROOMS = {
     optimalPulse: [20, 60],
     artClass: "room-9",
   },
+  10: {
+    name: "The Candy King",
+    flavor: "A dark room. One man. Candy crown of beads. Just hard candy regalia. A single spotlight. He looks down at you.",
+    unlockCost: 200000,
+    baseVibeRate: 5,
+    clickMultiplier: 10,
+    pressureEffect: 0,
+    optimalPressure: [0, 100],
+    optimalPulse: [0, 100],
+    artClass: "room-10",
+  },
 };
 
 
@@ -354,6 +365,32 @@ const ROOM_FLAVOR = {
     ],
     npcColors: ["#ffcc88", "#ffd700", "#ffee99", "#ffbb44", "#fff4cc"],
     npcCount: 6,
+  },
+  10: {
+    sounds: [
+      "...", "*silence*", "*heartbeat*", "*spotlight hum*", "*breath*",
+      "*footstep*", "...", "*crackle*", "*echo*",
+    ],
+    emojis: [
+      "\u{1F451}", "\u{1F36C}", "\u{1F506}", "\u{1FA91}", "\u{2B50}",
+      "\u{1F480}", "\u{1F52E}", "\u{1F31F}",
+    ],
+    quotes: [
+      "Not yet.",
+      "Only one person in room ten at a time",
+      "You better be raving harder than they are",
+      "Or you're dead. I mean, not dead.",
+      "He disintegrates. You become him.",
+      "You become a Plato's Rave franchisee",
+      "You're the candy king of Buffalo, New York",
+      "Get on up there",
+      "That's how they get a new Skrillex",
+      "The candy king says nothing. He just looks.",
+      "A single spotlight illuminates you",
+      "Fuzzy boots. Candy crown. Hard candy regalia.",
+    ],
+    npcColors: ["#ffd700"],
+    npcCount: 1,
   },
 };
 
@@ -816,6 +853,56 @@ var ROOM_ITEMS = {
       effect: { type: "comfyRange", value: 15 },
     },
   ],
+  10: [
+    {
+      id: "candy_bracelet",
+      emoji: "\u{1F4FF}",
+      name: "Candy Bracelet",
+      desc: "Kandi, in rave parlance. The king's currency. Each one brings you closer to the throne.",
+      baseCost: 100000,
+      effect: { type: "clickPower", value: 25 },
+    },
+    {
+      id: "fuzzy_boots",
+      emoji: "\u{1F97E}",
+      name: "Fuzzy Boots",
+      desc: "The king wears them. One man, dressed all wild. Fuzzy boots. You need a pair.",
+      baseCost: 120000,
+      effect: { type: "clickPower", value: 30 },
+    },
+    {
+      id: "spotlight_bulb",
+      emoji: "\u{1F4A1}",
+      name: "Spotlight Bulb",
+      desc: "A single spotlight illuminates you when you walk in. A brighter bulb means a brighter moment.",
+      baseCost: 150000,
+      effect: { type: "vibeRate", value: 20 },
+    },
+    {
+      id: "franchise_papers",
+      emoji: "\u{1F4C4}",
+      name: "Franchise Papers",
+      desc: "When you make it to room ten, you become a Plato's Rave franchisee. Sign here.",
+      baseCost: 200000,
+      effect: { type: "vibeRate", value: 35 },
+    },
+    {
+      id: "candy_crown",
+      emoji: "\u{1F451}",
+      name: "Candy Crown of Beads",
+      desc: "Just hard candy regalia. The crown sits heavy. You know what it means to wear it.",
+      baseCost: 250000,
+      effect: { type: "vibeRate", value: 50 },
+    },
+    {
+      id: "throne_cushion",
+      emoji: "\u{1FA91}",
+      name: "Throne Cushion",
+      desc: "The king's throne is beautiful but uncomfortable. This helps. You're going to be here a while.",
+      baseCost: 180000,
+      effect: { type: "comfyRange", value: 20 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -845,7 +932,7 @@ const PENALTY_FLOOR = 0.5;
 
 function createDefaultState() {
   return {
-    version: 3,
+    version: 4,
     lastSaved: Date.now(),
     vibe: 0,
     totalVibeEarned: 0,
@@ -864,6 +951,7 @@ function createDefaultState() {
       7: { unlocked: false, level: 0 },
       8: { unlocked: false, level: 0 },
       9: { unlocked: false, level: 0 },
+      10: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
@@ -892,7 +980,7 @@ function loadGame() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const saved = JSON.parse(raw);
-    if (saved && saved.version === 3) return saved;
+    if (saved && saved.version === 4) return saved;
     // Wipe incompatible saves
     localStorage.removeItem(SAVE_KEY);
     return null;
