@@ -83,6 +83,17 @@ const ROOMS = {
     optimalPulse: [40, 75],
     artClass: "room-7",
   },
+  8: {
+    name: "The Final Deception",
+    flavor: "The Container Store again. They want you to think you failed. There is no level eight, nine or ten. This is all we've made.",
+    unlockCost: 25000,
+    baseVibeRate: 10,
+    clickMultiplier: 3,
+    pressureEffect: 0,
+    optimalPressure: [25, 75],
+    optimalPulse: [25, 75],
+    artClass: "room-8",
+  },
 };
 
 
@@ -275,6 +286,34 @@ const ROOM_FLAVOR = {
       "Maybe forever, if you're killed by a trap",
     ],
     npcColors: ["#880044", "#cc0066", "#990033", "#aa2255", "#660033"],
+    npcCount: 5,
+  },
+  8: {
+    sounds: [
+      "*beep*", "*ding*", "*scanner*", "*shuffle*", "*rustle*",
+      "*receipt printing*", "EXCUSE ME", "*intercom*", "*muzak*",
+    ],
+    emojis: [
+      "\u{1F4E6}", "\u{1F6D2}", "\u{1F9FE}", "\u{1F50D}", "\u{1F3AD}",
+      "\u{2753}", "\u{1F914}", "\u{1F440}",
+    ],
+    quotes: [
+      "Welcome to The Container Store! Can I help you find anything?",
+      "There is no level eight, nine or ten",
+      "This is all we've made at this point",
+      "Why would there be two Container Stores so close to each other?",
+      "These are actors. Selling containers. To actors.",
+      "It's a can't-tainer store",
+      "There's one receipt in one till. Find it.",
+      "We're deep underground at this point",
+      "Is this part of the deception?",
+      "I have never been to The Container Store",
+      "I could use some 'tainers",
+      "We have so many containers. So many different kinds.",
+      "What do they ship the containers in? It's gonna fuck you up.",
+      "Get the fuck out! Quit telling people we're doing raves here!",
+    ],
+    npcColors: ["#6688aa", "#88aa88", "#aa8866", "#8888aa", "#77aa77"],
     npcCount: 5,
   },
 };
@@ -638,6 +677,56 @@ var ROOM_ITEMS = {
       effect: { type: "comfyRange", value: 10 },
     },
   ],
+  8: [
+    {
+      id: "magnifying_glass",
+      emoji: "\u{1F50D}",
+      name: "Magnifying Glass",
+      desc: "For reading receipts. One of them says 'The Cantainer Store.' That's your golden ticket.",
+      baseCost: 12000,
+      effect: { type: "vibeRate", value: 14 },
+    },
+    {
+      id: "fake_name_tag",
+      emoji: "\u{1F4DB}",
+      name: "Fake Name Tag",
+      desc: "It says 'ASSOCIATE' and no one questions it. You are also a Container Store employee, sort of legally, for tax reasons.",
+      baseCost: 15000,
+      effect: { type: "vibeRate", value: 18 },
+    },
+    {
+      id: "actor_headshot",
+      emoji: "\u{1F4F8}",
+      name: "Actor's Headshot",
+      desc: "Dropped by one of the actors selling containers to actors. Proof this isn't real.",
+      baseCost: 10000,
+      effect: { type: "clickPower", value: 12 },
+    },
+    {
+      id: "suspicious_container",
+      emoji: "\u{1F4E6}",
+      name: "Suspicious Container",
+      desc: "What do they ship the containers in? Other containers. It's containers all the way down.",
+      baseCost: 14000,
+      effect: { type: "clickPower", value: 15 },
+    },
+    {
+      id: "cantainer_receipt",
+      emoji: "\u{1F9FE}",
+      name: "Cantainer Store Receipt",
+      desc: "You found it. One receipt. One till. 'The Cantainer Store.' Boom. You solved it. You're ready.",
+      baseCost: 20000,
+      effect: { type: "vibeRate", value: 22 },
+    },
+    {
+      id: "employee_handbook",
+      emoji: "\u{1F4D5}",
+      name: "Employee Handbook",
+      desc: "You have to finish all the tutorial videos and training worksheets. There are so many containers.",
+      baseCost: 18000,
+      effect: { type: "comfyRange", value: 12 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -684,6 +773,7 @@ function createDefaultState() {
       5: { unlocked: false, level: 0 },
       6: { unlocked: false, level: 0 },
       7: { unlocked: false, level: 0 },
+      8: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
