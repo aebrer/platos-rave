@@ -72,6 +72,17 @@ const ROOMS = {
     optimalPulse: [15, 50],
     artClass: "room-6",
   },
+  7: {
+    name: "Traps",
+    flavor: "All traps. Trap music. Trap drums. People with big trap muscles watching you. Trapezes to swing over the traps. Gothic circus. You'll love it.",
+    unlockCost: 10000,
+    baseVibeRate: 15,
+    clickMultiplier: 5,
+    pressureEffect: 2.5,
+    optimalPressure: [35, 65],
+    optimalPulse: [40, 75],
+    artClass: "room-7",
+  },
 };
 
 
@@ -236,6 +247,34 @@ const ROOM_FLAVOR = {
       "I came for the exit on six and I'm not ashamed",
     ],
     npcColors: ["#ff6633", "#ff9944", "#cc4411", "#ffbb55", "#ee7722"],
+    npcCount: 5,
+  },
+  7: {
+    sounds: [
+      "SNAP", "*clang*", "WHOOSH", "*twang*", "CRASH",
+      "*swing*", "THWACK", "*creak*", "WUBWUB",
+    ],
+    emojis: [
+      "\u{1F3AA}", "\u{1FA78}", "\u{2694}\u{FE0F}", "\u{1F52E}", "\u{1F3AD}",
+      "\u{1F4AA}", "\u{1FA84}", "\u{1F6A8}",
+    ],
+    quotes: [
+      "There are traps all the way down",
+      "You do need the trapezes to get past the traps",
+      "Everyone's dressed like the first Panic at the Disco album",
+      "People are gonna be so fucked up and bedraggled by room seven",
+      "If you already speak Latin, this goes faster",
+      "Did you bring a prism? You should have brought a prism.",
+      "Maybe you're strong. Maybe you just run across the traps.",
+      "Get the ruby out of the gargoyle's eye socket",
+      "Can you charm the dudes with big traps to help you out?",
+      "The bathroom ain't trapped. We need to make that SO CLEAR.",
+      "Is that Trapt? Why is Trapt here?",
+      "Staind-brand earplugs to block out Trapt's music",
+      "We don't need more distractions in here",
+      "Maybe forever, if you're killed by a trap",
+    ],
+    npcColors: ["#880044", "#cc0066", "#990033", "#aa2255", "#660033"],
     npcCount: 5,
   },
 };
@@ -549,6 +588,56 @@ var ROOM_ITEMS = {
       effect: { type: "comfyRange", value: 10 },
     },
   ],
+  7: [
+    {
+      id: "trapeze_rig",
+      emoji: "\u{1F3AA}",
+      name: "Trapeze Rig",
+      desc: "Trapezes above. Having some fun. But oh man, you do need the trapezes to get past the traps.",
+      baseCost: 5000,
+      effect: { type: "vibeRate", value: 12 },
+    },
+    {
+      id: "prism",
+      emoji: "\u{1F52E}",
+      name: "Prism",
+      desc: "If you brought a prism, you can get out of here in a few minutes. Otherwise, gargoyle eye socket. Whole thing.",
+      baseCost: 8000,
+      effect: { type: "vibeRate", value: 18 },
+    },
+    {
+      id: "staind_earplugs",
+      emoji: "\u{1F3B5}",
+      name: "Staind-Brand Earplugs",
+      desc: "Special Staind-brand earplugs to block out Trapt's music. We'll know.",
+      baseCost: 4000,
+      effect: { type: "clickPower", value: 10 },
+    },
+    {
+      id: "gothic_ringmaster_hat",
+      emoji: "\u{1F3A9}",
+      name: "Gothic Ringmaster Hat",
+      desc: "Now it's feeling like Eyes Wide Shut and that bores the shit out of me. But the hat stays.",
+      baseCost: 6000,
+      effect: { type: "clickPower", value: 12 },
+    },
+    {
+      id: "latin_phrasebook",
+      emoji: "\u{1F4D6}",
+      name: "Latin Phrasebook",
+      desc: "If you already speak Latin, this room goes faster. If not, start studying. Carpe trappem.",
+      baseCost: 7000,
+      effect: { type: "vibeRate", value: 15 },
+    },
+    {
+      id: "trap_padding",
+      emoji: "\u{1F9E4}",
+      name: "Trap Padding",
+      desc: "Maybe you're strong. Maybe you just run across the traps and you get a little bit hurt. Less hurt now.",
+      baseCost: 6500,
+      effect: { type: "comfyRange", value: 10 },
+    },
+  ],
 };
 
 // Item spawning config
@@ -594,6 +683,7 @@ function createDefaultState() {
       4: { unlocked: false, level: 0 },
       5: { unlocked: false, level: 0 },
       6: { unlocked: false, level: 0 },
+      7: { unlocked: false, level: 0 },
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
