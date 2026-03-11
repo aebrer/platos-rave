@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Plato's Rave</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game">
+
+    <!-- Title bar: title, room map, credits -->
+    <div id="title-bar">
+      <span id="game-title">Plato's Rave</span>
+      <div id="room-map">
+        <div class="map-node" id="map-slot-0"></div>
+        <div class="map-edge" id="map-edge-0"></div>
+        <div class="map-node" id="map-slot-1"></div>
+        <div class="map-edge" id="map-edge-1"></div>
+        <div class="map-node" id="map-slot-2"></div>
+      </div>
+      <div id="credits">
+        <a href="about.html">about</a> &middot;
+        <a href="https://github.com/aebrer/platos-rave" target="_blank" rel="noopener">source</a>
+      </div>
+    </div>
+
+    <!-- The Room — perspective space, tap to dance -->
+    <main id="room-view" role="button" aria-label="Tap to dance">
+      <div id="room-space">
+        <div id="back-wall"></div>
+        <div id="floor-plane"></div>
+        <div id="room-props"></div>
+
+        <!-- Dancer -->
+        <div id="dancer">
+          <div id="dancer-head"></div>
+          <div id="dancer-body"></div>
+          <div id="dancer-legs">
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+          </div>
+          <div id="dancer-shadow"></div>
+        </div>
+      </div>
+
+      <!-- Floating vibe pops + ambient flavor text -->
+      <div id="click-feedback"></div>
+
+      <!-- Multiplier badge -->
+      <div id="multiplier" class="hidden">
+        <span id="multiplier-value"></span>
+      </div>
+    </main>
+
+    <!-- Stats + Room info panel (bottom) -->
+    <div id="bottom-panel">
+
+      <!-- Vibe counter + spread the love -->
+      <div id="vibe-block">
+        <div id="vibe-info">
+          <div id="vibe-count">0</div>
+          <div id="vibe-label">VIBE</div>
+          <div id="vibe-rate"><span id="vibe-per-sec">0</span> per second</div>
+        </div>
+        <button id="spread-love-btn" disabled>Spread the Love</button>
+      </div>
+
+      <!-- Pressure & Pulse bars -->
+      <div id="stat-bars">
+        <div class="stat-row">
+          <span class="stat-name">Pressure</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="pressure-fill"></div>
+            <div class="stat-optimal" id="pressure-optimal"></div>
+          </div>
+          <span class="stat-value" id="pressure-value">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">Pulse</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="pulse-fill"></div>
+            <div class="stat-optimal" id="pulse-optimal"></div>
+          </div>
+          <span class="stat-value" id="pulse-value">0</span>
+        </div>
+      </div>
+
+      <!-- Room inventory -->
+      <div id="room-inventory"></div>
+
+      <!-- Room description -->
+      <div id="room-desc">
+        <div id="room-title">Room 1 — The Container Store</div>
+        <div id="room-flavor">Welcome to the Container Store. You don't know it yet, but you're already at the rave.</div>
+      </div>
+
+      <!-- Navigation -->
+      <div id="room-nav">
+        <button id="nav-left" class="nav-btn" disabled>&larr; Back</button>
+        <div id="nav-center">
+          <div id="unlock-prompt" class="hidden">
+            <span id="unlock-text"></span>
+            <button id="unlock-button" disabled>UNLOCK</button>
+          </div>
+        </div>
+        <button id="nav-right" class="nav-btn">&rarr; Deeper</button>
+      </div>
+
+    </div>
+
+    <!-- Item purchase popup -->
+    <div id="item-popup" class="overlay hidden">
+      <div class="overlay-box item-popup-box">
+        <div id="item-popup-emoji" class="popup-big-emoji"></div>
+        <div id="item-popup-name" class="popup-item-name"></div>
+        <div id="item-popup-desc" class="popup-item-desc"></div>
+        <div id="item-popup-effect" class="popup-item-effect"></div>
+        <div id="item-popup-owned" class="popup-item-owned"></div>
+        <div class="popup-actions">
+          <button id="item-popup-buy" class="popup-buy-btn"></button>
+          <button id="item-popup-dismiss" class="popup-dismiss-btn">Not now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome back overlay -->
+    <div id="welcome-back" class="overlay hidden">
+      <div class="overlay-box">
+        <h2>Welcome back</h2>
+        <p id="welcome-message"></p>
+        <button id="welcome-dismiss">Keep raving</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
