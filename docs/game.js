@@ -1164,7 +1164,7 @@ function renderStats() {
   dom.pressureValue.textContent = Math.floor(p);
   dom.pulseValue.textContent = Math.floor(s);
 
-  // Spread the love: enabled when you have at least 1 vibe to spend
+  // Spread the love: enabled when 10% of vibes rounds to at least 1
   dom.spreadLoveBtn.disabled = Math.floor(state.vibe * 0.1) < 1;
 }
 
