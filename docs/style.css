@@ -190,6 +190,8 @@ html, body {
 #room-space.room-2 #floor-plane { background-image: url(assets/rooms/room2_floor.png); }
 #room-space.room-3 #back-wall { background-image: url(assets/rooms/room3_wall.png); }
 #room-space.room-3 #floor-plane { background-image: url(assets/rooms/room3_floor.png); }
+#room-space.room-4 #back-wall { background-image: url(assets/rooms/room4_wall.png); }
+#room-space.room-4 #floor-plane { background-image: url(assets/rooms/room4_floor.png); }
 
 /* === Room props (decorative elements per room) === */
 #room-props {
