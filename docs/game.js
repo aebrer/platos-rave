@@ -1074,6 +1074,17 @@ function getCurrentVibeRate() {
   return (base + itemBonus) * getRoomMultiplier(state.currentRoom);
 }
 
+function getVibeRateForRoom(roomNum) {
+  var room = ROOMS[roomNum];
+  if (!room) return 0;
+  var rs = state.rooms[roomNum];
+  if (!rs || !rs.unlocked) return 0;
+  var level = rs.level || 1;
+  var base = room.baseVibeRate * level;
+  var itemBonus = getItemBonus(roomNum, "vibeRate");
+  return (base + itemBonus) * getRoomMultiplier(roomNum);
+}
+
 function getClickValue() {
   var room = ROOMS[state.currentRoom];
   if (!room) return BASE_CLICK_VIBE;
@@ -1133,8 +1144,6 @@ var dom = {
   roomSpace: document.getElementById("room-space"),
   dancer: document.getElementById("dancer"),
   clickFeedback: document.getElementById("click-feedback"),
-  multiplier: document.getElementById("multiplier"),
-  multiplierValue: document.getElementById("multiplier-value"),
   navLeft: document.getElementById("nav-left"),
   navRight: document.getElementById("nav-right"),
   roomTitle: document.getElementById("room-title"),
@@ -1147,6 +1156,12 @@ var dom = {
   welcomeMessage: document.getElementById("welcome-message"),
   welcomeDismiss: document.getElementById("welcome-dismiss"),
   spreadLoveBtn: document.getElementById("spread-love-btn"),
+  breakdownBase: document.getElementById("breakdown-base"),
+  breakdownItems: document.getElementById("breakdown-items"),
+  breakdownMult: document.getElementById("breakdown-mult"),
+  breakdownPressure: document.getElementById("breakdown-pressure"),
+  navLeftVps: document.getElementById("nav-left-vps"),
+  navRightVps: document.getElementById("nav-right-vps"),
 };
 
 // ============================================================
@@ -1163,6 +1178,24 @@ function renderStats() {
   dom.pulseFill.style.width = s + "%";
   dom.pressureValue.textContent = Math.floor(p);
   dom.pulseValue.textContent = Math.floor(s);
+
+  // Rate breakdown
+  var room = ROOMS[state.currentRoom];
+  if (room) {
+    var rs = state.rooms[state.currentRoom];
+    var level = (rs && rs.level) ? rs.level : 1;
+    var base = room.baseVibeRate * level;
+    var itemBonus = getItemBonus(state.currentRoom, "vibeRate");
+    var mult = getRoomMultiplier(state.currentRoom);
+    dom.breakdownBase.textContent = formatNumber(base) + "/s";
+    dom.breakdownItems.textContent = "+" + formatNumber(itemBonus) + "/s";
+    dom.breakdownMult.textContent = mult.toFixed(1) + "x";
+    dom.breakdownMult.className = mult >= 1 ? "bonus" : "penalty";
+    var pe = room.pressureEffect;
+    var pressureText = pe < 0 ? "Calming" : pe === 0 ? "Neutral" : "Intense";
+    if (Math.abs(pe) >= 3) pressureText = pe < 0 ? "Very Calming" : "Very Intense";
+    dom.breakdownPressure.textContent = pressureText;
+  }
 
   // Spread the love: enabled when 10% of vibes rounds to at least 1
   dom.spreadLoveBtn.disabled = Math.floor(state.vibe * 0.1) < 1;
@@ -1191,16 +1224,13 @@ function renderRoom() {
   dom.roomSpace.className = room.artClass;
 }
 
-function renderMultiplier() {
-  var mult = getRoomMultiplier(state.currentRoom);
-  if (Math.abs(mult - 1) < 0.05) {
-    dom.multiplier.classList.add("hidden");
-    return;
-  }
-  dom.multiplier.classList.remove("hidden");
-  dom.multiplierValue.textContent = mult.toFixed(1) + "x";
-  dom.multiplier.classList.remove("bonus", "penalty");
-  dom.multiplier.classList.add(mult >= 1 ? "bonus" : "penalty");
+
+function pressureArrow(effect) {
+  if (effect <= -2) return "\u25BC\u25BC";     // ▼▼ strong calm
+  if (effect < 0) return "\u25BC";              // ▼ calm
+  if (effect === 0) return "\u2014";            // — neutral
+  if (effect <= 2) return "\u25B2";             // ▲ pressure
+  return "\u25B2\u25B2";                        // ▲▲ heavy pressure
 }
 
 function renderNav() {
@@ -1212,6 +1242,23 @@ function renderNav() {
   var nextUnlocked = state.rooms[nextRoom] && state.rooms[nextRoom].unlocked;
 
   dom.navRight.disabled = !nextUnlocked;
+
+  // VPS preview on nav buttons
+  if (!dom.navLeft.disabled && ROOMS[prevRoom]) {
+    var prevVps = getVibeRateForRoom(prevRoom);
+    var prevPressure = ROOMS[prevRoom].pressureEffect;
+    dom.navLeftVps.textContent = formatNumber(prevVps) + "/s " + pressureArrow(prevPressure);
+  } else {
+    dom.navLeftVps.textContent = "";
+  }
+
+  if (!dom.navRight.disabled && ROOMS[nextRoom]) {
+    var nextVps = getVibeRateForRoom(nextRoom);
+    var nextPressure = ROOMS[nextRoom].pressureEffect;
+    dom.navRightVps.textContent = formatNumber(nextVps) + "/s " + pressureArrow(nextPressure);
+  } else {
+    dom.navRightVps.textContent = "";
+  }
 
   if (nextExists && !nextUnlocked) {
     var cost = ROOMS[nextRoom].unlockCost;
@@ -1285,7 +1332,7 @@ function renderAll() {
   renderStats();
   renderOptimalRanges();
   renderRoom();
-  renderMultiplier();
+
   renderNav();
   renderMap();
   renderDancerState();
@@ -1580,7 +1627,7 @@ function showItemPopup(data) {
     overlay.classList.add("hidden");
     renderStats();
     renderOptimalRanges();
-    renderMultiplier();
+  
     renderNav();
     renderInventory();
   };
@@ -1688,7 +1735,7 @@ function handleTap(e) {
   triggerDanceAnimation();
 
   renderStats();
-  renderMultiplier();
+
   renderNav();
 }
 
@@ -1707,7 +1754,7 @@ function spreadTheLove() {
   state.vibe -= cost;
   state.pressure = clamp(state.pressure * 0.9, 0, 100);
   renderStats();
-  renderMultiplier();
+
   renderNav();
 }
 
@@ -1752,7 +1799,7 @@ function gameTick() {
   }
 
   renderStats();
-  renderMultiplier();
+
   renderNav();
 
   // Update buy button if item popup is open

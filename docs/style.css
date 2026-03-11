@@ -437,34 +437,6 @@ html, body {
   100% { opacity: 0; transform: translateY(-70px) scale(0.6); }
 }
 
-/* ============================================================
-   MULTIPLIER BADGE
-   ============================================================ */
-#multiplier {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 8;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-
-#multiplier.bonus {
-  color: var(--cyan);
-  background: rgba(0, 255, 204, 0.08);
-  border: 1px solid rgba(0, 255, 204, 0.25);
-  text-shadow: 0 0 8px var(--cyan-glow);
-}
-
-#multiplier.penalty {
-  color: var(--red);
-  background: rgba(255, 51, 68, 0.08);
-  border: 1px solid rgba(255, 51, 68, 0.25);
-}
 
 /* ============================================================
    BOTTOM PANEL — stats, description, navigation
@@ -515,6 +487,39 @@ html, body {
 #spread-love-btn:disabled {
   opacity: 0.3;
   cursor: default;
+}
+
+/* Rate breakdown (middle column) */
+#rate-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.breakdown-label {
+  color: var(--text-dim);
+}
+
+.breakdown-row span:last-child {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+#breakdown-mult.bonus {
+  color: var(--cyan);
+  text-shadow: 0 0 6px var(--cyan-glow);
+}
+
+#breakdown-mult.penalty {
+  color: var(--red);
 }
 
 #vibe-count {
@@ -650,6 +655,17 @@ html, body {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-vps {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--cyan);
+  text-shadow: 0 0 4px var(--cyan-glow);
 }
 
 .nav-btn:disabled {
