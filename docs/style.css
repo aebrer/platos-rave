@@ -1,0 +1,942 @@
+/* === Reset === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #050508;
+  --panel-bg: #0a0a10;
+  --wall: #0e0e18;
+  --floor: #0c0c14;
+  --text: #d0d0d0;
+  --text-dim: #888;
+  --accent: #ff00ff;
+  --accent-dim: #aa00aa;
+  --accent-glow: rgba(255, 0, 255, 0.3);
+  --cyan: #00ffcc;
+  --cyan-glow: rgba(0, 255, 204, 0.3);
+  --red: #ff3344;
+  --yellow: #ffaa00;
+  --green: #00ff88;
+  --border: #1a1a28;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  line-height: 1.3;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+/* === Full viewport game === */
+#game {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================================
+   TITLE BAR + ROOM MAP
+   ============================================================ */
+#title-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 12px;
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+#game-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#room-map {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 0;
+}
+
+#credits {
+  font-size: 0.65rem;
+  color: #555;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#credits a {
+  color: #666;
+  text-decoration: none;
+}
+
+#credits a:active {
+  color: var(--cyan);
+}
+
+.map-node {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.map-node.locked {
+  border: 1px solid #222;
+  color: #333;
+  background: transparent;
+}
+
+.map-node.unlocked {
+  border: 1px solid var(--accent-dim);
+  color: var(--accent-dim);
+  background: rgba(255, 0, 255, 0.05);
+}
+
+.map-node.current {
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  background: rgba(255, 0, 255, 0.15);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.map-edge {
+  width: 12px;
+  height: 1px;
+  background: #222;
+  flex-shrink: 0;
+}
+
+.map-node.unlocked ~ .map-edge,
+.map-node.current ~ .map-edge {
+  background: var(--accent-dim);
+}
+
+/* ============================================================
+   THE ROOM — isometric dungeon space
+   ============================================================ */
+#room-view {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 0;
+}
+
+#room-space {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 400px;
+  overflow: hidden;
+}
+
+/* Back wall */
+#back-wall {
+  position: absolute;
+  top: 0;
+  left: -5%;
+  width: 110%;
+  height: 55%;
+  z-index: 0;
+}
+
+/* Floor plane — perspective-tilted */
+#floor-plane {
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  width: 120%;
+  height: 55%;
+  transform-origin: bottom center;
+  transform: rotateX(35deg);
+  z-index: 1;
+}
+
+/* Room 1: Container Store — shelves, fluorescent, sterile */
+#room-space.room-1 #back-wall {
+  background:
+    /* shelf lines */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 40px,
+      rgba(80, 80, 100, 0.12) 40px, rgba(80, 80, 100, 0.12) 42px
+    ),
+    /* vertical dividers */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 80px,
+      rgba(80, 80, 100, 0.08) 80px, rgba(80, 80, 100, 0.08) 82px
+    ),
+    linear-gradient(180deg, #12121a 0%, #0e0e16 100%);
+}
+
+#room-space.room-1 #floor-plane {
+  background:
+    /* tile grid */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 48px,
+      rgba(100, 100, 130, 0.08) 48px, rgba(100, 100, 130, 0.08) 50px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 48px,
+      rgba(100, 100, 130, 0.08) 48px, rgba(100, 100, 130, 0.08) 50px
+    ),
+    linear-gradient(0deg, #16161e 0%, #0e0e16 100%);
+}
+
+/* Room 2: Warehouse — darker, industrial, magenta hints */
+#room-space.room-2 #back-wall {
+  background:
+    /* warehouse beams */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 100px,
+      rgba(255, 0, 255, 0.04) 100px, rgba(255, 0, 255, 0.04) 104px
+    ),
+    /* horizontal supports */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 70px,
+      rgba(255, 0, 255, 0.03) 70px, rgba(255, 0, 255, 0.03) 72px
+    ),
+    linear-gradient(180deg, #0c0814 0%, #080610 100%);
+}
+
+#room-space.room-2 #floor-plane {
+  background:
+    /* concrete texture */
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px, transparent 30px,
+      rgba(255, 0, 255, 0.02) 30px, rgba(255, 0, 255, 0.02) 31px
+    ),
+    linear-gradient(0deg, #141020 0%, #0a0810 100%);
+}
+
+/* === Room props (decorative elements per room) === */
+#room-props {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ============================================================
+   DANCER — bigger, more character
+   ============================================================ */
+#dancer {
+  position: absolute;
+  bottom: 28%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#dancer-head {
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-glow);
+  margin-bottom: -2px;
+}
+
+#dancer-body {
+  width: 16px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 3px;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#dancer-legs {
+  display: flex;
+  gap: 4px;
+  margin-top: -1px;
+}
+
+.leg {
+  width: 6px;
+  height: 18px;
+  background: var(--accent-dim);
+  border-radius: 0 0 2px 2px;
+}
+
+#dancer-shadow {
+  width: 40px;
+  height: 8px;
+  background: radial-gradient(ellipse, rgba(255, 0, 255, 0.2) 0%, transparent 70%);
+  margin-top: 2px;
+}
+
+/* Idle bob */
+#dancer {
+  animation: idle-bob 1.5s ease-in-out infinite;
+}
+
+@keyframes idle-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+/* Vibing (passive income) */
+#dancer.vibing {
+  animation: vibe-dance 0.5s ease-in-out infinite;
+}
+
+@keyframes vibe-dance {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+  25% { transform: translateX(-50%) translateY(-6px) rotate(-4deg); }
+  75% { transform: translateX(-50%) translateY(-6px) rotate(4deg); }
+}
+
+#dancer.vibing .leg.left {
+  animation: leg-left 0.5s ease-in-out infinite;
+}
+#dancer.vibing .leg.right {
+  animation: leg-right 0.5s ease-in-out infinite;
+}
+
+@keyframes leg-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-15deg); }
+}
+@keyframes leg-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+}
+
+/* Tap dance burst */
+#dancer.dancing {
+  animation: tap-dance 0.25s ease-out;
+}
+
+@keyframes tap-dance {
+  0% { transform: translateX(-50%) translateY(0) scaleY(1); }
+  20% { transform: translateX(-50%) translateY(-20px) scaleY(1.1) rotate(-8deg); }
+  50% { transform: translateX(-50%) translateY(-14px) scaleY(0.95) rotate(6deg); }
+  100% { transform: translateX(-50%) translateY(0) scaleY(1) rotate(0deg); }
+}
+
+/* ============================================================
+   NPC RAVE ATTENDEES
+   ============================================================ */
+.npc-dancer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  --npc-scale: 1;
+  transform: translateX(-50%) scale(var(--npc-scale));
+}
+
+.npc-head {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-bottom: -1px;
+}
+
+.npc-body {
+  width: 10px;
+  height: 20px;
+  border-radius: 2px;
+}
+
+.npc-legs {
+  display: flex;
+  gap: 3px;
+  margin-top: -1px;
+}
+
+.npc-leg {
+  width: 4px;
+  height: 12px;
+  border-radius: 0 0 2px 2px;
+}
+
+@keyframes npc-dance {
+  0%, 100% { transform: translateX(-50%) scale(var(--npc-scale)) translateY(0) rotate(0deg); }
+  20% { transform: translateX(-50%) scale(var(--npc-scale)) translateY(-5px) rotate(-6deg); }
+  50% { transform: translateX(-50%) scale(var(--npc-scale)) translateY(-3px) rotate(4deg); }
+  80% { transform: translateX(-50%) scale(var(--npc-scale)) translateY(-5px) rotate(-3deg); }
+}
+
+/* ============================================================
+   AMBIENT FLAVOR TEXT
+   ============================================================ */
+.ambient-pop {
+  position: absolute;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 6;
+}
+
+.ambient-sound {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: ambient-drift 3s ease-out forwards;
+}
+
+.ambient-emoji {
+  font-size: 1.6rem;
+  animation: ambient-drift 3.5s ease-out forwards;
+}
+
+.ambient-quote {
+  font-size: 0.8rem;
+  color: rgba(200, 200, 220, 0.5);
+  font-style: italic;
+  max-width: 50vw;
+  white-space: normal;
+  text-align: center;
+  animation: ambient-drift 4s ease-out forwards;
+}
+
+@keyframes ambient-drift {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translateY(-25px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-45px) scale(0.9);
+  }
+}
+
+/* ============================================================
+   CLICK FEEDBACK
+   ============================================================ */
+#click-feedback {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.click-pop {
+  position: absolute;
+  color: var(--accent);
+  font-size: 1.3rem;
+  font-weight: 700;
+  pointer-events: none;
+  animation: pop-up 0.8s ease-out forwards;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+@keyframes pop-up {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-70px) scale(0.6); }
+}
+
+/* ============================================================
+   MULTIPLIER BADGE
+   ============================================================ */
+#multiplier {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+#multiplier.bonus {
+  color: var(--cyan);
+  background: rgba(0, 255, 204, 0.08);
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  text-shadow: 0 0 8px var(--cyan-glow);
+}
+
+#multiplier.penalty {
+  color: var(--red);
+  background: rgba(255, 51, 68, 0.08);
+  border: 1px solid rgba(255, 51, 68, 0.25);
+}
+
+/* ============================================================
+   BOTTOM PANEL — stats, description, navigation
+   ============================================================ */
+#bottom-panel {
+  background: var(--panel-bg);
+  border-top: 2px solid var(--border);
+  padding: 12px 16px 10px;
+  flex-shrink: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Vibe counter */
+#vibe-block {
+  text-align: center;
+}
+
+#vibe-count {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 14px var(--accent-glow);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+#vibe-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+#vibe-rate {
+  font-size: 0.8rem;
+  color: var(--cyan);
+  text-shadow: 0 0 6px var(--cyan-glow);
+  margin-top: 2px;
+}
+
+/* Stat bars */
+#stat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-name {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  width: 70px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-track {
+  flex: 1;
+  height: 10px;
+  background: #111118;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stat-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* Optimal range indicator */
+.stat-optimal {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 0;
+  transition: left 0.3s, width 0.3s;
+}
+
+#pressure-fill {
+  background: linear-gradient(90deg, var(--red), #ff6644);
+  box-shadow: 0 0 6px rgba(255, 51, 68, 0.3);
+}
+
+#pulse-fill {
+  background: linear-gradient(90deg, var(--yellow), #ffcc44);
+  box-shadow: 0 0 6px rgba(255, 170, 0, 0.3);
+}
+
+.stat-value {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Room description */
+#room-desc {
+  padding: 6px 0;
+}
+
+#room-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+#room-flavor {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Navigation */
+#room-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.nav-btn:not(:disabled):active {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+#nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+#unlock-prompt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#unlock-text {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+#unlock-button {
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--accent);
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+}
+
+#unlock-button:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+#unlock-button:not(:disabled):active {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+
+/* ============================================================
+   ROOM ITEMS (spawned purchasables)
+   ============================================================ */
+.room-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 7;
+  animation: item-bob 2s ease-in-out infinite, item-appear 0.5s ease-out;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+
+.room-item-emoji {
+  font-size: 2rem;
+}
+
+.room-item-price {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-top: -2px;
+  border: 1px solid var(--accent);
+  text-shadow: 0 0 4px var(--accent-glow);
+}
+
+@keyframes item-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+}
+
+@keyframes item-appear {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.3); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+/* ============================================================
+   ROOM INVENTORY (bottom panel)
+   ============================================================ */
+#room-inventory {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 0;
+}
+
+#room-inventory:empty {
+  display: none;
+}
+
+.inv-slot {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.inv-slot:active {
+  border-color: var(--accent);
+  background: rgba(255, 0, 255, 0.08);
+}
+
+.inv-emoji {
+  font-size: 1.1rem;
+}
+
+.inv-count {
+  font-size: 0.7rem;
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+/* ============================================================
+   ITEM PURCHASE POPUP
+   ============================================================ */
+.item-popup-box {
+  max-width: 300px;
+}
+
+.popup-big-emoji {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.popup-item-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.popup-item-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.popup-item-effect {
+  font-size: 0.85rem;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+
+.popup-item-owned {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  min-height: 1em;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.popup-buy-btn {
+  padding: 8px 20px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+.popup-buy-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.popup-dismiss-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.popup-dismiss-btn:active {
+  border-color: var(--text-dim);
+}
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.overlay-box {
+  background: #0c0c14;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 28px 24px;
+  text-align: center;
+  max-width: 340px;
+  width: 85%;
+  box-shadow: 0 0 40px var(--accent-glow);
+}
+
+.overlay-box h2 {
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.overlay-box p {
+  margin-bottom: 18px;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.overlay-box button {
+  padding: 10px 24px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   DESKTOP — let it breathe
+   ============================================================ */
+@media (min-width: 600px) {
+  #game {
+    max-width: 480px;
+    margin: 0 auto;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+}
