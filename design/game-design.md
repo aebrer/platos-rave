@@ -23,6 +23,20 @@ Click for Vibe → Unlock room generators → Automate Vibe income
 - Spent to unlock rooms, buy upgrades, and power generators
 - Resets on prestige
 
+### Internal Stats: Pressure & Pulse
+Two hidden-ish stats that affect production efficiency per room:
+- **Pressure**: Increases in intense rooms (4, 5, 7), decreases in calm rooms (1, 3, 6, 9)
+- **Pulse**: Increases with activity/clicking, naturally decays toward a baseline over time
+
+Each room has an optimal pressure/pulse range. Being in the right room at the right
+internal state produces a Vibe multiplier (e.g., 1.5x–3x). Being too far outside the
+optimal range reduces gains. This creates a strategic layer: do you push ahead to a
+harder room for bigger base payouts, or stay in a lower room where your current state
+is optimal?
+
+Inspired directly by the episode: "We look at your pulse and we're like, 'No, this is
+a level two pulse.' If we drop you in five, you're gonna get the bends."
+
 ### Meta Currency: Kandi
 - Earned by completing a full Room 10 cycle (prestige)
 - Amount scales with total Vibe earned during the run
@@ -45,55 +59,85 @@ adds a new generator to the player's income. Each room has:
 - Entry point. Cheapest generator.
 - Generator: Organize Bins (click containers into neat rows)
 - Mechanic: Tutorial / introduction
+- Pressure effect: Calming (decreases pressure). Optimal at low pulse.
 
 ### Room 2 — The Cloister of Confidence
-*"You must be confident enough to risk trespassing charges to find the passage."*
+*"Room two is the warehouse of The Container Store. People are gonna say, 'Please go. This is not the rave.' But you have to keep raving through that."*
 - Generator: Sneak Past Employees (confidence builds Vibe)
-- Mechanic: First meaningful automation unlock
+- Mechanic: First meaningful automation unlock. Risk of "trespassing" —
+  employees can temporarily slow your generators.
+- Pressure effect: Mild increase. Optimal at moderate pulse.
 
-### Room 3 — Dry Rub Wings
-*"Buffalo Wild Wings, DoorDashed in. Dry rub only."*
+### Room 3 — Dry Rub Wings (Snack Checkpoint 1)
+*"We DoorDashed in Buffalo Wild Wings for room three. Dry rub only. Dry rub sauce comes in room six."*
 - Generator: Eat Wings (dry rub fuels the vibe)
-- Mechanic: First snack checkpoint. Travis's snack checkpoint system.
+- Mechanic: First snack checkpoint. Can't take wings with you.
+  Non-pressurized exit available (bail out gracefully here).
+- Pressure effect: Calming (decreases pressure). Restores pulse baseline.
 
-### Room 4 — The Escalation
-*"The bass is getting louder. The lights are getting stranger."*
-- Generator: Turn Up the Bass (rave intensity increases)
-- Mechanic: Vibe multiplier mechanic introduction
+### Room 4 — The Best Rave of Your Life
+*"Four? Fucking out of control. The best, fucking hardest rave you've ever been to in your whole life."*
+- Generator: Turn Up the Bass (rave intensity goes nuclear)
+- Mechanic: Highest base Vibe output of any room, but also spikes pressure
+  and pulse hard. You could get trapped here for hours thinking "it can't
+  get better." The sweet spot for players who've built up tolerance.
+- Pressure effect: Major increase. Optimal at high pulse — rewards commitment.
 
 ### Room 5 — Barometric Pressure
-*"Is it underground? Underwater? Purely psychological?"*
+*"You're gonna feel the pressure on your body. Your ears are gonna pop. It's like you're lowering down in the ocean."*
 - Generator: Pressurize (withstand the crushing vibe)
-- Mechanic: Some kind of pressure/risk mechanic — generators here
-  produce more but with variance?
+- Mechanic: Pressure spikes dramatically. Generators here have high variance —
+  big payouts when your stats are aligned, reduced when they're not.
+  Airlock (bathroom) required between 4 and 5. Layers 5-10 are pressurized.
+- Pressure effect: Massive increase. Optimal at very high pressure tolerance.
 
 ### Room 6 — Sauce on Six
-*"Buffalo Wild Wings again, but now with SAUCE."*
+*"Sauce on six. The sauce brings you back from the intense barotrauma."*
 - Generator: Sauce Wings (sauce amplifies everything)
 - Mechanic: Second snack checkpoint. Sauce multiplies Room 3 output too.
+  The sauce "brings you back" — pressure decreases here, restoring balance
+  after Room 5. Exit also available here for "real wild folks."
+  Also a ghost kitchen / DoorDash window.
+- Pressure effect: Calming (significant pressure decrease). Pulse recovery.
 
 ### Room 7 — Traps (feat. Trapt)
-*"Actual traps. Also the band Trapt plays here. Staind-brand earplugs available."*
+*"Seven, all traps. Trap music. Trapezes. Guys with big traps. Gothic circus. You'll love it."*
 - Generator: Dodge Traps (survive the gauntlet)
 - Mechanic: Risk/reward — traps can temporarily reduce income but
   successful dodges give burst Vibe. Active clicking minigame?
+  Everyone dressed like first Panic at the Disco album. Trapt is on retainer,
+  dropped in a random room each day. Staind-brand earplugs available.
+  If you know Latin, bring a prism, or are a WWI scholar: speed-run bonus.
+- Pressure effect: High increase. Optimal at moderate-high pulse (alert, not panicked).
 
-### Room 8 — Second Cloister of Confidence
-*"The brother of the employee from Room 2 confronts you."*
-- Generator: Assert Dominance (you've been here before, but harder)
-- Mechanic: Mirror of Room 2 but with escalated costs/rewards
+### Room 8 — The Final Deception / Cloister of Deceit
+*"Layer eight is The Container Store again. They want you to think you failed. There is no level eight, nine or 10."*
+- Generator: Investigate (search tills, spot inconsistencies)
+- Mechanic: A puzzle room. This is a fake Container Store ("The Cantainer Store")
+  staffed by actors. They want you to believe the rave is over. One receipt in
+  one till says "The Cantainer Store" — find it and you've solved it. Not just
+  time-gated: rewards active engagement and investigation. Deep underground.
+- Pressure effect: Disorienting. Pressure oscillates unpredictably.
 
-### Room 9 — The Final Feast
-*"Third snack checkpoint. You'll need the energy for what's next."*
-- Generator: Power Up (final preparations)
-- Mechanic: Buffs for the Room 10 encounter
+### Room 9 — Nirvana (Snack Checkpoint 3)
+*"Nine is nirvana, baby. Nine is the best, objectively the best layer. Nine is the best rave."*
+- Generator: Transcend (pure bliss Vibe generation)
+- Mechanic: The pleasure garden. Archivists devoted to scholarship maintain
+  the facility. Long tunnel to Room 10 lined with pictures of your life.
+  You can't leave nine until you don't want to go to 10. Third snack checkpoint.
+  Pressure and pulse both naturally stabilize here — the optimal room for
+  sustained passive income. But you can't prestige from here.
+- Pressure effect: Stabilizing. Both stats drift toward ideal equilibrium.
 
-### Room 10 — The Throne
-*"A single person on a throne wearing a kandi crown. Only one at a time."*
+### Room 10 — The Candy King
+*"A dark room. One man. Candy crown of beads. Just hard candy regalia. A single spotlight. He looks down at you."*
 - No generator — this is the prestige trigger
-- The kandi king assesses your party level
-- **"Not yet"** → Sent back to Room 1 (fail condition if Vibe too low?)
-- **Dethrone** → Prestige. Earn Kandi. You become the king. A new rave begins.
+- The candy king assesses your party level
+- **"Not yet"** → Booted right back to Room 1
+- **Dethrone** → He disintegrates. You become him. You become a Plato's Rave
+  franchisee. Prestige. Earn Kandi. A new rave begins.
+- Only one person in Room 10 at a time. "So, you better be raving harder
+  than they are. Or you're dead. I mean, not dead."
 
 ---
 
@@ -170,6 +214,9 @@ This gives the clicker side real engagement beyond buying upgrades.
   "totalVibeEarned": 0,
   "kandi": 0,
   "prestigeCount": 0,
+  "pressure": 0,
+  "pulse": 0,
+  "currentRoom": 1,
   "rooms": {
     "1": { "unlocked": true, "level": 1 },
     "2": { "unlocked": false, "level": 0 }
@@ -235,12 +282,15 @@ The first playable build should have:
 
 ## Future Features (Post-V1)
 
-- Rooms 3-10 with unique mechanics
+- Rooms 3-10 with unique mechanics per room
 - Prestige / Kandi system
+- Pressure & Pulse stat system with per-room optimal ranges
+- Room 8 Cantainer Store puzzle mechanic
+- Room 9 archivist NPC system
 - 300-key drop event
 - Python-generated procedural art assets
 - Sound effects and music
 - Achievements
-- Statistics page
+- Statistics page (including pressure/pulse history graph?)
 - Save export/import
 - Itch.io release
