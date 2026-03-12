@@ -58,6 +58,8 @@
           <div id="vibe-count">0</div>
           <div id="vibe-label">VIBE</div>
           <div id="vibe-rate"><span id="vibe-per-sec">0</span> per second</div>
+          <div id="real-vps">real: <span id="real-vps-value">0</span>/s</div>
+          <div id="kandi-display" class="hidden"></div>
         </div>
         <div id="rate-breakdown">
           <div class="breakdown-row"><span class="breakdown-label">Base</span><span id="breakdown-base">0</span></div>
@@ -124,6 +126,17 @@
           <button id="item-popup-buy" class="popup-buy-btn"></button>
           <button id="item-popup-dismiss" class="popup-dismiss-btn">Not now</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Transcendence overlay -->
+    <div id="transcendence" class="overlay hidden">
+      <div class="overlay-box transcendence-box">
+        <div id="transcendence-emoji" class="popup-big-emoji"></div>
+        <h2 id="transcendence-title"></h2>
+        <p id="transcendence-message"></p>
+        <p id="transcendence-stats"></p>
+        <button id="transcendence-dismiss"></button>
       </div>
     </div>
 

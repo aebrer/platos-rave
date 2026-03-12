@@ -955,6 +955,7 @@ function createDefaultState() {
     },
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
+    loveMult: 1,
     stats: {
       totalClicks: 0,
       totalVibeAllTime: 0,
@@ -1055,9 +1056,11 @@ function getRoomFitMultiplier(roomNum) {
   return PENALTY_FLOOR + fit * (OPTIMAL_BONUS - PENALTY_FLOOR);
 }
 
-// Total room multiplier: stat fitness * vibeMultiplier item bonuses
+// Total room multiplier: stat fitness * vibeMultiplier item bonuses * love (room 10 only)
 function getRoomMultiplier(roomNum) {
-  return getRoomFitMultiplier(roomNum) * (1 + getItemBonus(roomNum, "vibeMultiplier"));
+  var mult = getRoomFitMultiplier(roomNum) * (1 + getItemBonus(roomNum, "vibeMultiplier"));
+  if (roomNum === 10) mult *= (state.loveMult || 1);
+  return mult;
 }
 
 function getEffectiveOptimalRange(roomNum, stat) {
@@ -1087,6 +1090,11 @@ function getItemBonus(roomNum, effectType) {
   return total;
 }
 
+// Kandi prestige bonus: +10% global VPS per kandi
+function getKandiMultiplier() {
+  return 1 + (state.kandi || 0) * 0.1;
+}
+
 function getCurrentVibeRate() {
   var room = ROOMS[state.currentRoom];
   if (!room) return 0;
@@ -1094,7 +1102,7 @@ function getCurrentVibeRate() {
   var level = (rs && rs.level) ? rs.level : 1;
   var base = room.baseVibeRate * level;
   var itemBonus = getItemBonus(state.currentRoom, "vibeRate");
-  return (base + itemBonus) * getRoomMultiplier(state.currentRoom);
+  return (base + itemBonus) * getRoomMultiplier(state.currentRoom) * getKandiMultiplier();
 }
 
 function getVibeRateForRoom(roomNum) {
@@ -1105,7 +1113,7 @@ function getVibeRateForRoom(roomNum) {
   var level = rs.level || 1;
   var base = room.baseVibeRate * level;
   var itemBonus = getItemBonus(roomNum, "vibeRate");
-  return (base + itemBonus) * getRoomMultiplier(roomNum);
+  return (base + itemBonus) * getRoomMultiplier(roomNum) * getKandiMultiplier();
 }
 
 function getClickValue() {
@@ -1113,7 +1121,7 @@ function getClickValue() {
   if (!room) return BASE_CLICK_VIBE;
   var mult = getRoomMultiplier(state.currentRoom);
   var itemBonus = getItemBonus(state.currentRoom, "clickPower");
-  return Math.max(1, Math.floor((BASE_CLICK_VIBE * room.clickMultiplier + itemBonus) * mult));
+  return Math.max(1, Math.floor((BASE_CLICK_VIBE * room.clickMultiplier + itemBonus) * mult * getKandiMultiplier()));
 }
 
 function getItemCost(roomNum, itemId) {
@@ -1140,6 +1148,7 @@ function addVibe(amount) {
 // ============================================================
 
 function formatNumber(n) {
+  if (n === Infinity) return "\u221E";
   if (!isFinite(n)) return "0";
   if (n < 1000) return Math.floor(n).toString();
   var suffixes = ["", "K", "M", "B", "T", "Qa", "Qi"];
@@ -1186,6 +1195,7 @@ var dom = {
   breakdownPressure: document.getElementById("breakdown-pressure"),
   navLeftVps: document.getElementById("nav-left-vps"),
   navRightVps: document.getElementById("nav-right-vps"),
+  kandiDisplay: document.getElementById("kandi-display"),
 };
 
 // ============================================================
@@ -1195,6 +1205,14 @@ var dom = {
 function renderStats() {
   dom.vibeCount.textContent = formatNumber(state.vibe);
   dom.vibePerSec.textContent = formatNumber(getCurrentVibeRate());
+
+  // Kandi display
+  if (state.kandi > 0) {
+    dom.kandiDisplay.classList.remove("hidden");
+    dom.kandiDisplay.textContent = "\u{1F4FF} " + state.kandi + " Kandi (" + getKandiMultiplier().toFixed(1) + "x)";
+  } else {
+    dom.kandiDisplay.classList.add("hidden");
+  }
 
   var p = clamp(state.pressure, 0, 100);
   var s = clamp(state.pulse, 0, 100);
@@ -1212,10 +1230,12 @@ function renderStats() {
     var itemBonus = getItemBonus(state.currentRoom, "vibeRate");
     var fitMult = getRoomFitMultiplier(state.currentRoom);
     var itemMult = 1 + getItemBonus(state.currentRoom, "vibeMultiplier");
-    var totalMult = fitMult * itemMult;
+    var loveMult = (state.currentRoom === 10) ? (state.loveMult || 1) : 1;
+    var totalMult = fitMult * itemMult * loveMult * getKandiMultiplier();
     dom.breakdownBase.textContent = formatNumber(base) + "/s";
     dom.breakdownItems.textContent = "+" + formatNumber(itemBonus) + "/s";
-    dom.breakdownMult.textContent = totalMult.toFixed(1) + "x";
+    var multText = isFinite(totalMult) ? totalMult.toFixed(1) + "x" : "\u221Ex";
+    dom.breakdownMult.textContent = multText;
     dom.breakdownMult.className = totalMult >= 1 ? "bonus" : "penalty";
     dom.breakdownClick.textContent = formatNumber(getClickValue()) + "/tap";
     var pe = room.pressureEffect;
@@ -1226,6 +1246,11 @@ function renderStats() {
 
   // Spread the love: enabled when 10% of vibes rounds to at least 1
   dom.spreadLoveBtn.disabled = Math.floor(state.vibe * 0.1) < 1;
+  if (state.currentRoom === 10) {
+    dom.spreadLoveBtn.textContent = "Spread the Love (" + formatNumber(state.loveMult || 1) + "x)";
+  } else {
+    dom.spreadLoveBtn.textContent = "Spread the Love";
+  }
 }
 
 function renderOptimalRanges() {
@@ -1517,16 +1542,18 @@ function spawnAmbientText() {
   container.appendChild(el);
   el.addEventListener("animationend", function() { el.remove(); });
 
-  // Schedule next
-  var nextDelay = AMBIENT_INTERVAL_MIN +
-    Math.random() * (AMBIENT_INTERVAL_MAX - AMBIENT_INTERVAL_MIN);
+  // Schedule next — kandi speeds up ambient flavor
+  var kandiSpeed = 1 / (1 + (state.kandi || 0) * 0.15);
+  var nextDelay = (AMBIENT_INTERVAL_MIN +
+    Math.random() * (AMBIENT_INTERVAL_MAX - AMBIENT_INTERVAL_MIN)) * kandiSpeed;
   ambientTimer = setTimeout(spawnAmbientText, nextDelay);
 }
 
 function startAmbient() {
   if (ambientTimer) clearTimeout(ambientTimer);
-  var delay = AMBIENT_INTERVAL_MIN +
-    Math.random() * (AMBIENT_INTERVAL_MAX - AMBIENT_INTERVAL_MIN);
+  var kandiSpeed = 1 / (1 + (state.kandi || 0) * 0.15);
+  var delay = (AMBIENT_INTERVAL_MIN +
+    Math.random() * (AMBIENT_INTERVAL_MAX - AMBIENT_INTERVAL_MIN)) * kandiSpeed;
   ambientTimer = setTimeout(spawnAmbientText, delay);
 }
 
@@ -1788,10 +1815,73 @@ function spreadTheLove() {
   var cost = Math.floor(state.vibe * 0.1);
   if (cost < 1) return;
   state.vibe -= cost;
-  state.pressure = clamp(state.pressure * 0.9, 0, 100);
-  renderStats();
 
-  renderNav();
+  if (state.currentRoom === 10) {
+    // In the throne room, love amplifies your vibe — squaring each time
+    if (!state.loveMult || state.loveMult <= 1) {
+      state.loveMult = 2;
+    } else {
+      state.loveMult = state.loveMult * state.loveMult;
+    }
+    renderStats();
+    renderNav();
+    // Check for transcendence — when love overwhelms all finite measurement
+    if (!isFinite(state.loveMult)) {
+      triggerTranscendence();
+    }
+  } else {
+    state.pressure = clamp(state.pressure * 0.9, 0, 100);
+    renderStats();
+    renderNav();
+  }
+}
+
+function triggerTranscendence() {
+  var overlay = document.getElementById("transcendence");
+  var emoji = document.getElementById("transcendence-emoji");
+  var title = document.getElementById("transcendence-title");
+  var message = document.getElementById("transcendence-message");
+  var stats = document.getElementById("transcendence-stats");
+  var btn = document.getElementById("transcendence-dismiss");
+
+  emoji.textContent = "\u{1F451}";
+  title.textContent = "The Candy King Disintegrates";
+  message.textContent = "He looks down at you. The spotlight trembles. " +
+    "Your love is infinite. His candy crown crumbles to dust. " +
+    "You are the Candy King now. You are a Plato's Rave franchisee.";
+  var nextKandi = (state.kandi || 0) + 1;
+  var nextMult = 1 + nextKandi * 0.1;
+  var freeRooms = Math.min(nextKandi + 1, 10);
+  stats.textContent = "+1 Kandi \u2022 " + nextMult.toFixed(1) + "x global multiplier \u2022 " +
+    freeRooms + " rooms unlocked \u2022 faster pulse decay \u2022 more flavor";
+  btn.textContent = "Enter Room 11";
+  overlay.classList.remove("hidden");
+
+  btn.onclick = function() {
+    overlay.classList.add("hidden");
+    performPrestige();
+  };
+}
+
+function performPrestige() {
+  state.prestigeCount++;
+  state.kandi += 1;
+  // Reset everything except prestige/kandi/all-time stats
+  var keepPrestige = state.prestigeCount;
+  var keepKandi = state.kandi;
+  var keepAllTime = state.stats.totalVibeAllTime;
+  state = createDefaultState();
+  state.prestigeCount = keepPrestige;
+  state.kandi = keepKandi;
+  state.stats.totalVibeAllTime = keepAllTime;
+  // Kandi unlocks rooms: you remember the way
+  var freeRooms = Math.min(keepKandi + 1, 10);
+  for (var r = 2; r <= freeRooms; r++) {
+    state.rooms[r] = { unlocked: true, level: 1 };
+  }
+  vibeSnapshots = [];
+  saveGame();
+  renderAll();
 }
 
 function unlockNextRoom() {
@@ -1812,6 +1902,32 @@ function unlockNextRoom() {
 
 var lastTick = Date.now();
 
+// Rolling real VPS tracker (measures actual vibe income over a window)
+var REAL_VPS_WINDOW = 15; // seconds
+var vibeSnapshots = []; // { time, earned }
+var realVpsEl = document.getElementById("real-vps-value");
+
+function updateRealVps(now) {
+  vibeSnapshots.push({ time: now, earned: state.totalVibeEarned });
+  var cutoff = now - REAL_VPS_WINDOW * 1000;
+  while (vibeSnapshots.length > 1 && vibeSnapshots[0].time < cutoff) {
+    vibeSnapshots.shift();
+  }
+  if (vibeSnapshots.length < 2) {
+    realVpsEl.textContent = "0";
+    return;
+  }
+  var first = vibeSnapshots[0];
+  var last = vibeSnapshots[vibeSnapshots.length - 1];
+  var elapsed = (last.time - first.time) / 1000;
+  if (elapsed < 1) {
+    realVpsEl.textContent = "0";
+    return;
+  }
+  var realVps = (last.earned - first.earned) / elapsed;
+  realVpsEl.textContent = formatNumber(Math.max(0, realVps));
+}
+
 function gameTick() {
   var now = Date.now();
   var dt = (now - lastTick) / 1000;
@@ -1831,10 +1947,12 @@ function gameTick() {
 
   // Pulse decays
   if (state.pulse > 0) {
-    state.pulse = clamp(state.pulse - PULSE_DECAY_RATE * dt, 0, 100);
+    var pulseDecay = PULSE_DECAY_RATE * (1 + (state.kandi || 0) * 0.2);
+    state.pulse = clamp(state.pulse - pulseDecay * dt, 0, 100);
   }
 
   renderStats();
+  updateRealVps(now);
 
   renderNav();
 
