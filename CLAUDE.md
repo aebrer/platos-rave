@@ -4,7 +4,7 @@
 **Developer**: Drew Brereton (aebrer) - Python/generative art background
 **Inspiration**: MBMBaM Episode 674 — the longest single bit in podcast history
 **Repo**: `https://github.com/aebrer/platos-rave` (private during dev)
-**PR**: `https://github.com/aebrer/platos-rave/pull/1`
+**Domain**: platosrave.club (CNAME configured, DNS pending)
 
 General working style, communication preferences, debugging process, and commit conventions
 are in the global `~/CLAUDE.md`. This file covers Plato's Rave-specific context only.
@@ -40,7 +40,7 @@ for source material from the podcast. Full searchable transcript at `reference/t
   - Room textures live at `docs/assets/rooms/` (wall + floor per room)
   - Placeholder textures generated with ImageMagick for now
   - Real textures will use the Deep Yellow creator→critic→revision cycle
-- **Save System**: LocalStorage with versioned JSON schema (currently v3)
+- **Save System**: LocalStorage with versioned JSON schema (currently v4)
 - **Testing**: QA checklist in `design/qa-checklist.md` — Claude runs this before PRs
 
 ---
@@ -70,7 +70,7 @@ for source material from the podcast. Full searchable transcript at `reference/t
 
 ---
 
-## Current State (v0.1.0 + rooms branch)
+## Current State (v0.2.1)
 
 ### What's Built
 - Full-viewport dungeon crawler layout (mobile-first)
@@ -89,26 +89,39 @@ for source material from the podcast. Full searchable transcript at `reference/t
 - Pressure & Pulse stats with per-room optimal ranges and multipliers
 - Optimal range indicators on stat bars (always visible, expand with items)
 - "Spread the Love" button — spend 10% vibes to reduce pressure by 10%
+  - In Room 10: squares the love multiplier instead (boss mechanic)
 - Room navigation with unlock mechanic
+- Nav buttons show VPS preview with comparison arrows (▲ higher / ▼ lower)
+- Rate breakdown panel: Base, Items, Mult, Click, Pressure
+- Real VPS tracker (15s rolling average of actual throughput)
 - NPC rave attendees (per-room colors, staggered dance animations)
 - Ambient flavor: onomatopoeia, emojis, NPC quotes from the episode
 - Purchasable room items that spawn as bobbing emojis with price tags
-  - 6 items per room (vibeRate, clickPower, comfyRange effects)
+  - 6 items per room, 5 effect types: vibeRate, vibeMultiplier, clickPower, comfyRange, pulseDampen
   - Items stack, cost scales 1.3x per copy, persist in room inventory
   - Tap inventory slots to see item details
+  - Buy button updates live as vibes increase
+- King boss mechanic: love multiplier squares per Spread the Love press (~10 to transcend)
+- Kandi prestige system:
+  - +10% global VPS and click power per kandi
+  - Free room unlocks (kandi N → rooms 1 through N+1)
+  - +20% pulse decay speed per kandi
+  - 15% faster ambient flavor per kandi
+  - Kandi display in vibe info panel
 - 3-node room map centered on current position (mystery "?" hints at loop)
 - LocalStorage save/load with offline catch-up (24h cap)
+- Save failure warning banner (surfaces localStorage errors to player)
 - About page with MBMBaM credits and fan project disclaimer
 - Placeholder room textures (ImageMagick plasma, loaded as tiling PNGs)
-- CNAME for platosrave.club (DNS not configured yet)
+- CNAME for platosrave.club
 
 ### What's Not Built Yet
-- Prestige / Kandi system
 - Real procedural textures (use `/generate-texture` skill when ready)
 - 300-key drop event
 - Sound / music
 - Metaversal variant rooms
 - Achievements, stats page, save export
+- Kandi cosmetics (dancer colors, NPC dialogue acknowledging prestige)
 
 ---
 
