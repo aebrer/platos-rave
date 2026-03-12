@@ -389,25 +389,32 @@ html, body {
 .ambient-sound {
   font-size: 1.1rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.6);
   font-style: italic;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8),
+               -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8),
+               0 0 6px rgba(0,0,0,0.5);
   animation: ambient-drift 3s ease-out forwards;
 }
 
 .ambient-emoji {
   font-size: 1.6rem;
+  filter: drop-shadow(0 0 3px rgba(0,0,0,0.7));
   animation: ambient-drift 3.5s ease-out forwards;
 }
 
 .ambient-quote {
   font-size: 0.8rem;
-  color: rgba(200, 200, 220, 0.5);
+  color: rgba(200, 200, 220, 0.7);
   font-style: italic;
   max-width: 50vw;
   white-space: normal;
   text-align: center;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8),
+               -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8),
+               0 0 6px rgba(0,0,0,0.5);
   animation: ambient-drift 4s ease-out forwards;
 }
 
@@ -447,6 +454,8 @@ html, body {
   font-size: 1.3rem;
   font-weight: 700;
   pointer-events: none;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8),
+               -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);
   animation: pop-up 0.8s ease-out forwards;
   text-shadow: 0 0 10px var(--accent-glow);
 }

@@ -1234,7 +1234,14 @@ function renderStats() {
     var totalMult = fitMult * itemMult * loveMult * getKandiMultiplier();
     dom.breakdownBase.textContent = formatNumber(base) + "/s";
     dom.breakdownItems.textContent = "+" + formatNumber(itemBonus) + "/s";
-    var multText = isFinite(totalMult) ? totalMult.toFixed(1) + "x" : "\u221Ex";
+    var multText;
+    if (!isFinite(totalMult)) {
+      multText = "\u221Ex";
+    } else if (totalMult >= 1e6) {
+      multText = totalMult.toExponential(1) + "x";
+    } else {
+      multText = totalMult.toFixed(1) + "x";
+    }
     dom.breakdownMult.textContent = multText;
     dom.breakdownMult.className = totalMult >= 1 ? "bonus" : "penalty";
     dom.breakdownClick.textContent = formatNumber(getClickValue()) + "/tap";
@@ -1247,7 +1254,9 @@ function renderStats() {
   // Spread the love: enabled when 10% of vibes rounds to at least 1
   dom.spreadLoveBtn.disabled = Math.floor(state.vibe * 0.1) < 1;
   if (state.currentRoom === 10) {
-    dom.spreadLoveBtn.textContent = "Spread the Love (" + formatNumber(state.loveMult || 1) + "x)";
+    var lm = state.loveMult || 1;
+    var lmText = !isFinite(lm) ? "\u221E" : lm >= 1e6 ? lm.toExponential(1) : formatNumber(lm);
+    dom.spreadLoveBtn.textContent = "Spread the Love (" + lmText + "x)";
   } else {
     dom.spreadLoveBtn.textContent = "Spread the Love";
   }
@@ -1446,12 +1455,13 @@ function spawnNPCs() {
 
     var roomNum = state.currentRoom;
     var spritePath = "assets/sprites/npcs/room" + roomNum + "/";
-    // Random position on the "floor" area
-    var xPos = 10 + Math.random() * 80; // 10-90% horizontal
-    var yPos = 45 + Math.random() * 35; // 45-80% vertical (floor area)
-    var scale = 0.5 + (yPos - 45) / 70; // Closer to bottom = larger (perspective)
-    var animDuration = 0.4 + Math.random() * 0.4; // Varied dance speed
-    var animDelay = Math.random() * -2; // Staggered
+    // Room 10: Candy King is big, centered, imposing
+    var isCandyKing = (roomNum === 10);
+    var xPos = isCandyKing ? 50 : (10 + Math.random() * 80);
+    var yPos = isCandyKing ? 42 : (45 + Math.random() * 35);
+    var scale = isCandyKing ? 2.5 : (0.5 + (yPos - 45) / 70);
+    var animDuration = isCandyKing ? 1.2 : (0.4 + Math.random() * 0.4);
+    var animDelay = isCandyKing ? 0 : (Math.random() * -2);
 
     npc.style.cssText =
       "position:absolute;" +
