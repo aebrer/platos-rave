@@ -1091,9 +1091,9 @@ function getItemBonus(roomNum, effectType) {
   return total;
 }
 
-// Kandi prestige bonus: +10% global VPS per kandi
+// Kandi prestige bonus: 2^kandi global multiplier (1x, 2x, 4x, 8x, 16x...)
 function getKandiMultiplier() {
-  return 1 + (state.kandi || 0) * 0.1;
+  return Math.pow(2, state.kandi || 0);
 }
 
 function getCurrentVibeRate() {
@@ -1210,7 +1210,7 @@ function renderStats() {
   // Kandi display
   if (state.kandi > 0) {
     dom.kandiDisplay.classList.remove("hidden");
-    dom.kandiDisplay.textContent = "\u{1F4FF} " + state.kandi + " Kandi (" + getKandiMultiplier().toFixed(1) + "x)";
+    dom.kandiDisplay.textContent = "\u{1F4FF} " + state.kandi + " Kandi (" + formatNumber(getKandiMultiplier()) + "x)";
   } else {
     dom.kandiDisplay.classList.add("hidden");
   }
@@ -1462,7 +1462,7 @@ function spawnNPCs() {
     var spritePath = "assets/sprites/npcs/room" + roomNum + "/";
     // Room 10: Candy King is big, centered, imposing
     var isCandyKing = (roomNum === 10);
-    var xPos = isCandyKing ? 50 : (10 + Math.random() * 80);
+    var xPos = isCandyKing ? 35 : (10 + Math.random() * 80);
     var yPos = isCandyKing ? 42 : (45 + Math.random() * 35);
     var scale = isCandyKing ? 2.5 : (0.5 + (yPos - 45) / 70);
     var animDuration = isCandyKing ? 1.2 : (0.4 + Math.random() * 0.4);
@@ -1859,9 +1859,9 @@ function triggerTranscendence() {
     "Your love is infinite. His candy crown crumbles to dust. " +
     "You are the Candy King now. You are a Plato's Rave franchisee.";
   var nextKandi = (state.kandi || 0) + 1;
-  var nextMult = 1 + nextKandi * 0.1;
+  var nextMult = Math.pow(2, nextKandi);
   var freeRooms = Math.min(nextKandi + 1, 10);
-  stats.textContent = "+1 Kandi \u2022 " + nextMult.toFixed(1) + "x global multiplier \u2022 " +
+  stats.textContent = "+1 Kandi \u2022 " + formatNumber(nextMult) + "x global multiplier \u2022 " +
     freeRooms + " rooms unlocked \u2022 faster pulse decay \u2022 more flavor";
   btn.textContent = "Enter Room 11";
   overlay.classList.remove("hidden");

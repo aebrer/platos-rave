@@ -103,7 +103,7 @@ for source material from the podcast. Full searchable transcript at `reference/t
   - Buy button updates live as vibes increase
 - King boss mechanic: love multiplier squares per Spread the Love press (~10 to transcend)
 - Kandi prestige system:
-  - +10% global VPS and click power per kandi
+  - 2^kandi global VPS and click power multiplier (2x, 4x, 8x, 16x...)
   - Free room unlocks (kandi N → rooms 1 through N+1)
   - +20% pulse decay speed per kandi
   - 15% faster ambient flavor per kandi
