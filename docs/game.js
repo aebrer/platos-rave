@@ -1295,10 +1295,13 @@ function vpsArrow(otherVps, currentVps) {
 }
 
 function renderNav() {
+  var canWrap = state.rooms[10] && state.rooms[10].unlocked;
   var prevRoom = state.currentRoom - 1;
+  if (canWrap && prevRoom < 1) prevRoom = 10;
   dom.navLeft.disabled = prevRoom < 1 || !state.rooms[prevRoom] || !state.rooms[prevRoom].unlocked;
 
   var nextRoom = state.currentRoom + 1;
+  if (canWrap && nextRoom > 10) nextRoom = 1;
   var nextExists = !!ROOMS[nextRoom];
   var nextUnlocked = state.rooms[nextRoom] && state.rooms[nextRoom].unlocked;
 
@@ -1809,6 +1812,10 @@ function handleTap(e) {
 
 function navigateRoom(direction) {
   var target = state.currentRoom + direction;
+  // Wrap around when all rooms unlocked: 1←→10
+  var canWrap = state.rooms[10] && state.rooms[10].unlocked;
+  if (canWrap && target < 1) target = 10;
+  if (canWrap && target > 10) target = 1;
   if (!ROOMS[target]) return;
   var rs = state.rooms[target];
   if (!rs || !rs.unlocked) return;
