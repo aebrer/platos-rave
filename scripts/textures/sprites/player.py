@@ -2,7 +2,7 @@
 Generate player character sprites for Plato's Rave.
 Tiny pixel-art sprites of a raver attending an escalating rave in a Container Store.
 
-Output: /home/drew/projects/platos-rave/docs/assets/sprites/player/
+Output: docs/assets/sprites/player/
   - head.png (20x20)
   - torso.png (16x28)
   - leg_left.png (5x16)

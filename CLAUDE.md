@@ -3,7 +3,7 @@
 **Project**: Plato's Rave — Dungeon-crawler-aesthetic incremental idle game
 **Developer**: Drew Brereton (aebrer) - Python/generative art background
 **Inspiration**: MBMBaM Episode 674 — the longest single bit in podcast history
-**Repo**: `https://github.com/aebrer/platos-rave` (private during dev)
+**Repo**: `https://github.com/aebrer/platos-rave`
 **Domain**: platosrave.club (CNAME configured, DNS pending)
 
 General working style, communication preferences, debugging process, and commit conventions
@@ -48,7 +48,7 @@ for source material from the podcast. Full searchable transcript at `reference/t
 ## Project Structure
 
 ```
-/home/drew/projects/platos-rave/
+platos-rave/
 ├── CLAUDE.md
 ├── README.md
 ├── docs/                  # GitHub Pages prod — game lives here
