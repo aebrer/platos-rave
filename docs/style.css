@@ -179,8 +179,8 @@ html, body {
 #floor-plane {
   position: absolute;
   bottom: 0;
-  left: -10%;
-  width: 120%;
+  left: -30%;
+  width: 160%;
   height: 55%;
   transform-origin: bottom center;
   transform: rotateX(35deg);
