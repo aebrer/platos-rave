@@ -956,6 +956,7 @@ function createDefaultState() {
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
     loveMult: 1,
+    room10Discount: 1,
     stats: {
       totalClicks: 0,
       totalVibeAllTime: 0,
@@ -1090,9 +1091,9 @@ function getItemBonus(roomNum, effectType) {
   return total;
 }
 
-// Kandi prestige bonus: +10% global VPS per kandi
+// Kandi prestige bonus: 2^kandi global multiplier (1x, 2x, 4x, 8x, 16x...)
 function getKandiMultiplier() {
-  return 1 + (state.kandi || 0) * 0.1;
+  return Math.pow(2, state.kandi || 0);
 }
 
 function getCurrentVibeRate() {
@@ -1209,7 +1210,7 @@ function renderStats() {
   // Kandi display
   if (state.kandi > 0) {
     dom.kandiDisplay.classList.remove("hidden");
-    dom.kandiDisplay.textContent = "\u{1F4FF} " + state.kandi + " Kandi (" + getKandiMultiplier().toFixed(1) + "x)";
+    dom.kandiDisplay.textContent = "\u{1F4FF} " + state.kandi + " Kandi (" + formatNumber(getKandiMultiplier()) + "x)";
   } else {
     dom.kandiDisplay.classList.add("hidden");
   }
@@ -1234,7 +1235,14 @@ function renderStats() {
     var totalMult = fitMult * itemMult * loveMult * getKandiMultiplier();
     dom.breakdownBase.textContent = formatNumber(base) + "/s";
     dom.breakdownItems.textContent = "+" + formatNumber(itemBonus) + "/s";
-    var multText = isFinite(totalMult) ? totalMult.toFixed(1) + "x" : "\u221Ex";
+    var multText;
+    if (!isFinite(totalMult)) {
+      multText = "\u221Ex";
+    } else if (totalMult >= 1e6) {
+      multText = totalMult.toExponential(1) + "x";
+    } else {
+      multText = totalMult.toFixed(1) + "x";
+    }
     dom.breakdownMult.textContent = multText;
     dom.breakdownMult.className = totalMult >= 1 ? "bonus" : "penalty";
     dom.breakdownClick.textContent = formatNumber(getClickValue()) + "/tap";
@@ -1247,7 +1255,9 @@ function renderStats() {
   // Spread the love: enabled when 10% of vibes rounds to at least 1
   dom.spreadLoveBtn.disabled = Math.floor(state.vibe * 0.1) < 1;
   if (state.currentRoom === 10) {
-    dom.spreadLoveBtn.textContent = "Spread the Love (" + formatNumber(state.loveMult || 1) + "x)";
+    var lm = state.loveMult || 1;
+    var lmText = !isFinite(lm) ? "\u221E" : lm >= 1e6 ? lm.toExponential(1) : formatNumber(lm);
+    dom.spreadLoveBtn.textContent = "Spread the Love (" + lmText + "x)";
   } else {
     dom.spreadLoveBtn.textContent = "Spread the Love";
   }
@@ -1285,10 +1295,13 @@ function vpsArrow(otherVps, currentVps) {
 }
 
 function renderNav() {
+  var canWrap = state.rooms[10] && state.rooms[10].unlocked;
   var prevRoom = state.currentRoom - 1;
+  if (canWrap && prevRoom < 1) prevRoom = 10;
   dom.navLeft.disabled = prevRoom < 1 || !state.rooms[prevRoom] || !state.rooms[prevRoom].unlocked;
 
   var nextRoom = state.currentRoom + 1;
+  if (canWrap && nextRoom > 10) nextRoom = 1;
   var nextExists = !!ROOMS[nextRoom];
   var nextUnlocked = state.rooms[nextRoom] && state.rooms[nextRoom].unlocked;
 
@@ -1312,9 +1325,13 @@ function renderNav() {
   }
 
   if (nextExists && !nextUnlocked) {
-    var cost = ROOMS[nextRoom].unlockCost;
+    var baseCost = ROOMS[nextRoom].unlockCost;
+    var discount = (nextRoom === 10) ? (state.room10Discount || 1) : 1;
+    var cost = Math.floor(baseCost * discount);
     dom.unlockPrompt.classList.remove("hidden");
-    dom.unlockText.textContent = formatNumber(cost) + " Vibe";
+    var costText = formatNumber(cost) + " Vibe";
+    if (discount < 1) costText += " (" + Math.round((1 - discount) * 100) + "% off)";
+    dom.unlockText.textContent = costText;
     dom.unlockButton.disabled = state.vibe < cost;
   } else {
     dom.unlockPrompt.classList.add("hidden");
@@ -1444,13 +1461,15 @@ function spawnNPCs() {
     var npc = document.createElement("div");
     npc.className = "npc-dancer";
 
-    var color = flavor.npcColors[n % flavor.npcColors.length];
-    // Random position on the "floor" area
-    var xPos = 10 + Math.random() * 80; // 10-90% horizontal
-    var yPos = 45 + Math.random() * 35; // 45-80% vertical (floor area)
-    var scale = 0.5 + (yPos - 45) / 70; // Closer to bottom = larger (perspective)
-    var animDuration = 0.4 + Math.random() * 0.4; // Varied dance speed
-    var animDelay = Math.random() * -2; // Staggered
+    var roomNum = state.currentRoom;
+    var spritePath = "assets/sprites/npcs/room" + roomNum + "/";
+    // Room 10: Candy King is big, centered, imposing
+    var isCandyKing = (roomNum === 10);
+    var xPos = isCandyKing ? 35 : (10 + Math.random() * 80);
+    var yPos = isCandyKing ? 42 : (45 + Math.random() * 35);
+    var scale = isCandyKing ? 2.5 : (0.5 + (yPos - 45) / 70);
+    var animDuration = isCandyKing ? 1.2 : (0.4 + Math.random() * 0.4);
+    var animDelay = isCandyKing ? 0 : (Math.random() * -2);
 
     npc.style.cssText =
       "position:absolute;" +
@@ -1463,28 +1482,17 @@ function spawnNPCs() {
     // Head
     var head = document.createElement("div");
     head.className = "npc-head";
-    head.style.background = color;
-    head.style.boxShadow = "0 0 8px " + color + "44";
+    head.style.backgroundImage = "url(" + spritePath + "head.png)";
 
     // Body
     var body = document.createElement("div");
     body.className = "npc-body";
-    body.style.background = color;
-    body.style.boxShadow = "0 0 6px " + color + "44";
+    body.style.backgroundImage = "url(" + spritePath + "torso.png)";
 
     // Legs
     var legs = document.createElement("div");
     legs.className = "npc-legs";
-    var legL = document.createElement("div");
-    legL.className = "npc-leg";
-    legL.style.background = color;
-    legL.style.opacity = "0.7";
-    var legR = document.createElement("div");
-    legR.className = "npc-leg";
-    legR.style.background = color;
-    legR.style.opacity = "0.7";
-    legs.appendChild(legL);
-    legs.appendChild(legR);
+    legs.style.backgroundImage = "url(" + spritePath + "legs.png)";
 
     npc.appendChild(head);
     npc.appendChild(body);
@@ -1804,6 +1812,10 @@ function handleTap(e) {
 
 function navigateRoom(direction) {
   var target = state.currentRoom + direction;
+  // Wrap around when all rooms unlocked: 1←→10
+  var canWrap = state.rooms[10] && state.rooms[10].unlocked;
+  if (canWrap && target < 1) target = 10;
+  if (canWrap && target > 10) target = 1;
   if (!ROOMS[target]) return;
   var rs = state.rooms[target];
   if (!rs || !rs.unlocked) return;
@@ -1831,6 +1843,10 @@ function spreadTheLove() {
     }
   } else {
     state.pressure = clamp(state.pressure * 0.9, 0, 100);
+    // Room 9: spreading love also reduces Room 10 unlock cost by 10%
+    if (state.currentRoom === 9 && state.rooms[10] && !state.rooms[10].unlocked) {
+      state.room10Discount = (state.room10Discount || 1) * 0.9;
+    }
     renderStats();
     renderNav();
   }
@@ -1850,9 +1866,9 @@ function triggerTranscendence() {
     "Your love is infinite. His candy crown crumbles to dust. " +
     "You are the Candy King now. You are a Plato's Rave franchisee.";
   var nextKandi = (state.kandi || 0) + 1;
-  var nextMult = 1 + nextKandi * 0.1;
+  var nextMult = Math.pow(2, nextKandi);
   var freeRooms = Math.min(nextKandi + 1, 10);
-  stats.textContent = "+1 Kandi \u2022 " + nextMult.toFixed(1) + "x global multiplier \u2022 " +
+  stats.textContent = "+1 Kandi \u2022 " + formatNumber(nextMult) + "x global multiplier \u2022 " +
     freeRooms + " rooms unlocked \u2022 faster pulse decay \u2022 more flavor";
   btn.textContent = "Enter Room 11";
   overlay.classList.remove("hidden");
@@ -1887,7 +1903,9 @@ function performPrestige() {
 function unlockNextRoom() {
   var nextRoom = state.currentRoom + 1;
   if (!ROOMS[nextRoom]) return;
-  var cost = ROOMS[nextRoom].unlockCost;
+  var baseCost = ROOMS[nextRoom].unlockCost;
+  var discount = (nextRoom === 10) ? (state.room10Discount || 1) : 1;
+  var cost = Math.floor(baseCost * discount);
   if (state.vibe < cost) return;
 
   state.vibe -= cost;

@@ -179,8 +179,8 @@ html, body {
 #floor-plane {
   position: absolute;
   bottom: 0;
-  left: -10%;
-  width: 120%;
+  left: -30%;
+  width: 160%;
   height: 55%;
   transform-origin: bottom center;
   transform: rotateX(35deg);
@@ -239,18 +239,16 @@ html, body {
 #dancer-head {
   width: 20px;
   height: 20px;
-  background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 12px var(--accent-glow);
+  background: url(assets/sprites/player/head.png) center/contain no-repeat;
   margin-bottom: -2px;
+  image-rendering: pixelated;
 }
 
 #dancer-body {
   width: 16px;
   height: 28px;
-  background: var(--accent);
-  border-radius: 3px;
-  box-shadow: 0 0 10px var(--accent-glow);
+  background: url(assets/sprites/player/torso.png) center/contain no-repeat;
+  image-rendering: pixelated;
 }
 
 #dancer-legs {
@@ -260,16 +258,24 @@ html, body {
 }
 
 .leg {
-  width: 6px;
-  height: 18px;
-  background: var(--accent-dim);
-  border-radius: 0 0 2px 2px;
+  width: 5px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.leg.left {
+  background: url(assets/sprites/player/leg_left.png) center/contain no-repeat;
+}
+
+.leg.right {
+  background: url(assets/sprites/player/leg_right.png) center/contain no-repeat;
 }
 
 #dancer-shadow {
   width: 40px;
   height: 8px;
-  background: radial-gradient(ellipse, rgba(255, 0, 255, 0.2) 0%, transparent 70%);
+  background: url(assets/sprites/player/shadow.png) center/contain no-repeat;
+  image-rendering: pixelated;
   margin-top: 2px;
 }
 
@@ -337,26 +343,30 @@ html, body {
 .npc-head {
   width: 14px;
   height: 14px;
-  border-radius: 50%;
   margin-bottom: -1px;
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .npc-body {
   width: 10px;
   height: 20px;
-  border-radius: 2px;
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .npc-legs {
-  display: flex;
-  gap: 3px;
-  margin-top: -1px;
-}
-
-.npc-leg {
-  width: 4px;
+  width: 8px;
   height: 12px;
-  border-radius: 0 0 2px 2px;
+  margin-top: -1px;
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 @keyframes npc-dance {
@@ -379,25 +389,32 @@ html, body {
 .ambient-sound {
   font-size: 1.1rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.6);
   font-style: italic;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8),
+               -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8),
+               0 0 6px rgba(0,0,0,0.5);
   animation: ambient-drift 3s ease-out forwards;
 }
 
 .ambient-emoji {
   font-size: 1.6rem;
+  filter: drop-shadow(0 0 3px rgba(0,0,0,0.7));
   animation: ambient-drift 3.5s ease-out forwards;
 }
 
 .ambient-quote {
   font-size: 0.8rem;
-  color: rgba(200, 200, 220, 0.5);
+  color: rgba(200, 200, 220, 0.7);
   font-style: italic;
   max-width: 50vw;
   white-space: normal;
   text-align: center;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8),
+               -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8),
+               0 0 6px rgba(0,0,0,0.5);
   animation: ambient-drift 4s ease-out forwards;
 }
 
@@ -437,6 +454,8 @@ html, body {
   font-size: 1.3rem;
   font-weight: 700;
   pointer-events: none;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8),
+               -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);
   animation: pop-up 0.8s ease-out forwards;
   text-shadow: 0 0 10px var(--accent-glow);
 }
