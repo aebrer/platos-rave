@@ -481,10 +481,12 @@ html, body {
   color: var(--cyan);
   border: 1px solid var(--cyan);
   cursor: pointer;
-  white-space: nowrap;
   text-shadow: 0 0 6px var(--cyan-glow);
   box-shadow: 0 0 8px var(--cyan-glow);
   transition: background 0.2s, box-shadow 0.2s;
+  flex-shrink: 1;
+  min-width: 0;
+  text-align: center;
 }
 
 #spread-love-btn:hover:not(:disabled) {
