@@ -956,6 +956,7 @@ function createDefaultState() {
     // Per-room inventory: { "1": { "bluetooth_speaker": 2, "premium_bins": 1 }, ... }
     inventory: {},
     loveMult: 1,
+    room10Discount: 1,
     stats: {
       totalClicks: 0,
       totalVibeAllTime: 0,
@@ -1321,9 +1322,13 @@ function renderNav() {
   }
 
   if (nextExists && !nextUnlocked) {
-    var cost = ROOMS[nextRoom].unlockCost;
+    var baseCost = ROOMS[nextRoom].unlockCost;
+    var discount = (nextRoom === 10) ? (state.room10Discount || 1) : 1;
+    var cost = Math.floor(baseCost * discount);
     dom.unlockPrompt.classList.remove("hidden");
-    dom.unlockText.textContent = formatNumber(cost) + " Vibe";
+    var costText = formatNumber(cost) + " Vibe";
+    if (discount < 1) costText += " (" + Math.round((1 - discount) * 100) + "% off)";
+    dom.unlockText.textContent = costText;
     dom.unlockButton.disabled = state.vibe < cost;
   } else {
     dom.unlockPrompt.classList.add("hidden");
@@ -1831,6 +1836,10 @@ function spreadTheLove() {
     }
   } else {
     state.pressure = clamp(state.pressure * 0.9, 0, 100);
+    // Room 9: spreading love also reduces Room 10 unlock cost by 10%
+    if (state.currentRoom === 9 && state.rooms[10] && !state.rooms[10].unlocked) {
+      state.room10Discount = (state.room10Discount || 1) * 0.9;
+    }
     renderStats();
     renderNav();
   }
@@ -1887,7 +1896,9 @@ function performPrestige() {
 function unlockNextRoom() {
   var nextRoom = state.currentRoom + 1;
   if (!ROOMS[nextRoom]) return;
-  var cost = ROOMS[nextRoom].unlockCost;
+  var baseCost = ROOMS[nextRoom].unlockCost;
+  var discount = (nextRoom === 10) ? (state.room10Discount || 1) : 1;
+  var cost = Math.floor(baseCost * discount);
   if (state.vibe < cost) return;
 
   state.vibe -= cost;
