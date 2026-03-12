@@ -47,21 +47,26 @@
       <!-- Floating vibe pops + ambient flavor text -->
       <div id="click-feedback"></div>
 
-      <!-- Multiplier badge -->
-      <div id="multiplier" class="hidden">
-        <span id="multiplier-value"></span>
-      </div>
     </main>
 
     <!-- Stats + Room info panel (bottom) -->
     <div id="bottom-panel">
 
-      <!-- Vibe counter + spread the love -->
+      <!-- Vibe counter + rate breakdown + spread the love -->
       <div id="vibe-block">
         <div id="vibe-info">
           <div id="vibe-count">0</div>
           <div id="vibe-label">VIBE</div>
           <div id="vibe-rate"><span id="vibe-per-sec">0</span> per second</div>
+          <div id="real-vps">real: <span id="real-vps-value">0</span>/s</div>
+          <div id="kandi-display" class="hidden"></div>
+        </div>
+        <div id="rate-breakdown">
+          <div class="breakdown-row"><span class="breakdown-label">Base</span><span id="breakdown-base">0</span></div>
+          <div class="breakdown-row"><span class="breakdown-label">Items</span><span id="breakdown-items">0</span></div>
+          <div class="breakdown-row"><span class="breakdown-label">Mult</span><span id="breakdown-mult">1.0x</span></div>
+          <div class="breakdown-row"><span class="breakdown-label">Click</span><span id="breakdown-click">0</span></div>
+          <div class="breakdown-row"><span class="breakdown-label">Pressure</span><span id="breakdown-pressure"></span></div>
         </div>
         <button id="spread-love-btn" disabled>Spread the Love</button>
       </div>
@@ -97,14 +102,14 @@
 
       <!-- Navigation -->
       <div id="room-nav">
-        <button id="nav-left" class="nav-btn" disabled>&larr; Back</button>
+        <button id="nav-left" class="nav-btn" disabled><span class="nav-label">&larr; Back</span><span class="nav-vps" id="nav-left-vps"></span></button>
         <div id="nav-center">
           <div id="unlock-prompt" class="hidden">
             <span id="unlock-text"></span>
             <button id="unlock-button" disabled>UNLOCK</button>
           </div>
         </div>
-        <button id="nav-right" class="nav-btn">&rarr; Deeper</button>
+        <button id="nav-right" class="nav-btn" disabled><span class="nav-label">&rarr; Deeper</span><span class="nav-vps" id="nav-right-vps"></span></button>
       </div>
 
     </div>
@@ -121,6 +126,17 @@
           <button id="item-popup-buy" class="popup-buy-btn"></button>
           <button id="item-popup-dismiss" class="popup-dismiss-btn">Not now</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Transcendence overlay -->
+    <div id="transcendence" class="overlay hidden">
+      <div class="overlay-box transcendence-box">
+        <div id="transcendence-emoji" class="popup-big-emoji"></div>
+        <h2 id="transcendence-title"></h2>
+        <p id="transcendence-message"></p>
+        <p id="transcendence-stats"></p>
+        <button id="transcendence-dismiss"></button>
       </div>
     </div>
 

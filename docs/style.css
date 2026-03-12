@@ -69,6 +69,15 @@ html, body {
   flex-shrink: 0;
 }
 
+#kandi-display {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 #room-map {
   display: flex;
   align-items: center;
@@ -188,6 +197,22 @@ html, body {
 #room-space.room-1 #floor-plane { background-image: url(assets/rooms/room1_floor.png); }
 #room-space.room-2 #back-wall { background-image: url(assets/rooms/room2_wall.png); }
 #room-space.room-2 #floor-plane { background-image: url(assets/rooms/room2_floor.png); }
+#room-space.room-3 #back-wall { background-image: url(assets/rooms/room3_wall.png); }
+#room-space.room-3 #floor-plane { background-image: url(assets/rooms/room3_floor.png); }
+#room-space.room-4 #back-wall { background-image: url(assets/rooms/room4_wall.png); }
+#room-space.room-4 #floor-plane { background-image: url(assets/rooms/room4_floor.png); }
+#room-space.room-5 #back-wall { background-image: url(assets/rooms/room5_wall.png); }
+#room-space.room-5 #floor-plane { background-image: url(assets/rooms/room5_floor.png); }
+#room-space.room-6 #back-wall { background-image: url(assets/rooms/room6_wall.png); }
+#room-space.room-6 #floor-plane { background-image: url(assets/rooms/room6_floor.png); }
+#room-space.room-7 #back-wall { background-image: url(assets/rooms/room7_wall.png); }
+#room-space.room-7 #floor-plane { background-image: url(assets/rooms/room7_floor.png); }
+#room-space.room-8 #back-wall { background-image: url(assets/rooms/room8_wall.png); }
+#room-space.room-8 #floor-plane { background-image: url(assets/rooms/room8_floor.png); }
+#room-space.room-9 #back-wall { background-image: url(assets/rooms/room9_wall.png); }
+#room-space.room-9 #floor-plane { background-image: url(assets/rooms/room9_floor.png); }
+#room-space.room-10 #back-wall { background-image: url(assets/rooms/room10_wall.png); }
+#room-space.room-10 #floor-plane { background-image: url(assets/rooms/room10_floor.png); }
 
 /* === Room props (decorative elements per room) === */
 #room-props {
@@ -379,19 +404,19 @@ html, body {
 @keyframes ambient-drift {
   0% {
     opacity: 0;
-    transform: translateY(0) scale(0.8);
+    transform: translateX(var(--x-shift, 0)) translateY(0) scale(0.8);
   }
   15% {
     opacity: 1;
-    transform: translateY(-5px) scale(1);
+    transform: translateX(var(--x-shift, 0)) translateY(-5px) scale(1);
   }
   70% {
     opacity: 0.7;
-    transform: translateY(-25px) scale(1);
+    transform: translateX(var(--x-shift, 0)) translateY(-25px) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-45px) scale(0.9);
+    transform: translateX(var(--x-shift, 0)) translateY(-45px) scale(0.9);
   }
 }
 
@@ -421,34 +446,6 @@ html, body {
   100% { opacity: 0; transform: translateY(-70px) scale(0.6); }
 }
 
-/* ============================================================
-   MULTIPLIER BADGE
-   ============================================================ */
-#multiplier {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 8;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-
-#multiplier.bonus {
-  color: var(--cyan);
-  background: rgba(0, 255, 204, 0.08);
-  border: 1px solid rgba(0, 255, 204, 0.25);
-  text-shadow: 0 0 8px var(--cyan-glow);
-}
-
-#multiplier.penalty {
-  color: var(--red);
-  background: rgba(255, 51, 68, 0.08);
-  border: 1px solid rgba(255, 51, 68, 0.25);
-}
 
 /* ============================================================
    BOTTOM PANEL — stats, description, navigation
@@ -501,6 +498,39 @@ html, body {
   cursor: default;
 }
 
+/* Rate breakdown (middle column) */
+#rate-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.breakdown-label {
+  color: var(--text-dim);
+}
+
+.breakdown-row span:last-child {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+#breakdown-mult.bonus {
+  color: var(--cyan);
+  text-shadow: 0 0 6px var(--cyan-glow);
+}
+
+#breakdown-mult.penalty {
+  color: var(--red);
+}
+
 #vibe-count {
   font-size: 2.2rem;
   font-weight: 700;
@@ -523,6 +553,12 @@ html, body {
   color: var(--cyan);
   text-shadow: 0 0 6px var(--cyan-glow);
   margin-top: 2px;
+}
+
+#real-vps {
+  font-size: 0.7rem;
+  color: rgba(200, 200, 220, 0.5);
+  margin-top: 1px;
 }
 
 /* Stat bars */
@@ -634,6 +670,17 @@ html, body {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-vps {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--cyan);
+  text-shadow: 0 0 4px var(--cyan-glow);
 }
 
 .nav-btn:disabled {
@@ -851,6 +898,28 @@ html, body {
 }
 
 /* ============================================================
+   SAVE WARNING
+   ============================================================ */
+.save-warning {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(200, 40, 40, 0.9);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  z-index: 999;
+  animation: save-warn-fade 8s ease-out forwards;
+}
+
+@keyframes save-warn-fade {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ============================================================
    OVERLAY
    ============================================================ */
 .overlay {
@@ -900,6 +969,21 @@ html, body {
   font-size: 0.9rem;
   cursor: pointer;
   letter-spacing: 0.1em;
+}
+
+.transcendence-box {
+  text-align: center;
+  animation: transcend-glow 2s ease-in-out infinite alternate;
+}
+
+.transcendence-box h2 {
+  color: #ffd700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes transcend-glow {
+  0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+  100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.5); }
 }
 
 /* ============================================================
