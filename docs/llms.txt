@@ -1,0 +1,45 @@
+# Plato's Rave
+
+> An incremental idle game with dungeon-crawler aesthetics, set inside a Container Store.
+
+## What is this?
+
+Plato's Rave is a free, open-source browser game inspired by the legendary 54-minute uninterrupted bit from My Brother, My Brother and Me Episode 674. You progress through 10 rooms of escalating absurdity — from a normal Container Store, through a warehouse rave, a Buffalo Wild Wings wing break, a pressure chamber descent, a gothic circus trap room, and ultimately to the throne of the Candy King.
+
+## How it works
+
+- Tap/click to dance and generate Vibe (the game's currency)
+- Each room has a unique theme, NPCs, items, and ambient flavor text
+- Buy items to boost your Vibe rate — each room has its own inventory
+- Internal stats (Pressure and Pulse) determine which room is optimal
+- Navigate between rooms to find the best earning strategy
+- Room 10 is the Candy King's throne — defeat him to prestige
+- Prestige earns Kandi, a permanent exponential multiplier (2^n)
+
+## Rooms
+
+1. The Container Store — a normal retail store (the entry point)
+2. The Cloister of Confidence — the warehouse behind the store
+3. Dry Rub Wings — Buffalo Wild Wings snack checkpoint (dry rub only)
+4. The Best Rave of Your Life — peak intensity, neon lasers, UV glow
+5. Barometric Pressure — submarine/pressure chamber descent
+6. Sauce on Six — ghost kitchen wing checkpoint (now with sauce)
+7. Traps — gothic circus, trap music, trapezes, gargoyle riddles
+8. The Final Deception — a fake Container Store (something is wrong)
+9. Nirvana — transcendent pleasure garden, the real best rave
+10. The Candy King — dark room, single spotlight, candy crown, the boss
+
+## Credits
+
+- Game by Drew Brereton (https://entropist.ca)
+- Inspired by Justin, Travis, and Griffin McElroy's MBMBaM
+- Not affiliated with or endorsed by the McElroy family or Maximum Fun
+- MIT License
+- Source code: https://github.com/aebrer/platos-rave
+
+## Technical
+
+- Vanilla HTML/CSS/JS — no frameworks, no build step
+- All textures procedurally generated with Python (scripts in repo)
+- Hosted on GitHub Pages at platosrave.club
+- Saves to localStorage, works offline
