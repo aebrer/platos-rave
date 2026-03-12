@@ -1444,7 +1444,8 @@ function spawnNPCs() {
     var npc = document.createElement("div");
     npc.className = "npc-dancer";
 
-    var color = flavor.npcColors[n % flavor.npcColors.length];
+    var roomNum = state.currentRoom;
+    var spritePath = "assets/sprites/npcs/room" + roomNum + "/";
     // Random position on the "floor" area
     var xPos = 10 + Math.random() * 80; // 10-90% horizontal
     var yPos = 45 + Math.random() * 35; // 45-80% vertical (floor area)
@@ -1463,28 +1464,17 @@ function spawnNPCs() {
     // Head
     var head = document.createElement("div");
     head.className = "npc-head";
-    head.style.background = color;
-    head.style.boxShadow = "0 0 8px " + color + "44";
+    head.style.backgroundImage = "url(" + spritePath + "head.png)";
 
     // Body
     var body = document.createElement("div");
     body.className = "npc-body";
-    body.style.background = color;
-    body.style.boxShadow = "0 0 6px " + color + "44";
+    body.style.backgroundImage = "url(" + spritePath + "torso.png)";
 
     // Legs
     var legs = document.createElement("div");
     legs.className = "npc-legs";
-    var legL = document.createElement("div");
-    legL.className = "npc-leg";
-    legL.style.background = color;
-    legL.style.opacity = "0.7";
-    var legR = document.createElement("div");
-    legR.className = "npc-leg";
-    legR.style.background = color;
-    legR.style.opacity = "0.7";
-    legs.appendChild(legL);
-    legs.appendChild(legR);
+    legs.style.backgroundImage = "url(" + spritePath + "legs.png)";
 
     npc.appendChild(head);
     npc.appendChild(body);
